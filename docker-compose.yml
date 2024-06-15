@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+
+  socializedb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: SocializeDb
+    ports:
+      - "1432:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=DbAdmin!
+    volumes:
+      - sqldata-socialize:/var/opt/mssql:rw
+
+  distributedcache:
+    image: redis:7.2.4
+    container_name: socialize_cache
+    restart: always
+    ports:
+      - "6379:6379"
+volumes:
+  sqldata-socialize:

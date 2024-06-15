@@ -27,6 +27,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Tests.Unit", "Soc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Tests.Architecture", "Socialize.Tests.Architecture\Socialize.Tests.Architecture.csproj", "{B7DDDDB2-401D-4212-955A-DF77D1BCB4D1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{2B5CF53F-19A9-4007-826D-AC7798A2AC9E}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +83,7 @@ Global
 		{C32FB2AC-B15F-4F2C-B430-C940063FC470} = {A6F3F4AE-22A2-4CAC-8C60-2C9F7B013715}
 		{0F0210CC-B2AD-47F3-AD14-187CADC2BE0A} = {38EDDED6-678E-4901-B39E-51FE850B9273}
 		{B7DDDDB2-401D-4212-955A-DF77D1BCB4D1} = {38EDDED6-678E-4901-B39E-51FE850B9273}
+		{2B5CF53F-19A9-4007-826D-AC7798A2AC9E} = {3F954E28-2868-42B2-B16B-E0414A910FE3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3D9E8E99-D031-4877-ADE9-AFCBBA93B123}
