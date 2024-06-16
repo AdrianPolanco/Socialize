@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Socialize.Core.Application\Socialize.Core.Application.csproj" />
     <ProjectReference Include="..\Socialize.Core.Domain\Socialize.Core.Domain.csproj" />
-    <ProjectReference Include="..\Socialize.Infrastructure.Persistence\Socialize.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\Socialize.Infrastructure.Shared\Socialize.Infrastructure.Shared.csproj" />
   </ItemGroup>
 

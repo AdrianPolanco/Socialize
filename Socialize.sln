@@ -13,19 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Infrastructure.Identity", "Socialize.Infrastructure\Socialize.Infrastructure.Identity.csproj", "{36786969-7060-47C9-A68C-0BF1B4694490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Infrastructure.Persistence", "Socialize.Infrastructure.Persistence\Socialize.Infrastructure.Persistence.csproj", "{AC537623-6FFB-484A-BE8A-BA3E94A8043E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Infrastructure.Shared", "Socialize.Infrastructure.Shared\Socialize.Infrastructure.Shared.csproj", "{09523A6B-6F26-4BE5-A3C0-2179EE122FF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Infrastructure.Shared", "Socialize.Infrastructure.Shared\Socialize.Infrastructure.Shared.csproj", "{09523A6B-6F26-4BE5-A3C0-2179EE122FF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Core.Domain", "Socialize.Core.Domain\Socialize.Core.Domain.csproj", "{AF91042E-E303-46EC-A524-BF014F24353B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Core.Domain", "Socialize.Core.Domain\Socialize.Core.Domain.csproj", "{AF91042E-E303-46EC-A524-BF014F24353B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Core.Application", "Socialize.Core.Application\Socialize.Core.Application.csproj", "{C32FB2AC-B15F-4F2C-B430-C940063FC470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Core.Application", "Socialize.Core.Application\Socialize.Core.Application.csproj", "{C32FB2AC-B15F-4F2C-B430-C940063FC470}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{38EDDED6-678E-4901-B39E-51FE850B9273}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Tests.Unit", "Socialize.Tests.Unit\Socialize.Tests.Unit.csproj", "{0F0210CC-B2AD-47F3-AD14-187CADC2BE0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Tests.Unit", "Socialize.Tests.Unit\Socialize.Tests.Unit.csproj", "{0F0210CC-B2AD-47F3-AD14-187CADC2BE0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socialize.Tests.Architecture", "Socialize.Tests.Architecture\Socialize.Tests.Architecture.csproj", "{B7DDDDB2-401D-4212-955A-DF77D1BCB4D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socialize.Tests.Architecture", "Socialize.Tests.Architecture\Socialize.Tests.Architecture.csproj", "{B7DDDDB2-401D-4212-955A-DF77D1BCB4D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{2B5CF53F-19A9-4007-826D-AC7798A2AC9E}"
 	ProjectSection(SolutionItems) = preProject
@@ -46,10 +44,6 @@ Global
 		{36786969-7060-47C9-A68C-0BF1B4694490}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36786969-7060-47C9-A68C-0BF1B4694490}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36786969-7060-47C9-A68C-0BF1B4694490}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC537623-6FFB-484A-BE8A-BA3E94A8043E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC537623-6FFB-484A-BE8A-BA3E94A8043E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC537623-6FFB-484A-BE8A-BA3E94A8043E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC537623-6FFB-484A-BE8A-BA3E94A8043E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09523A6B-6F26-4BE5-A3C0-2179EE122FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09523A6B-6F26-4BE5-A3C0-2179EE122FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09523A6B-6F26-4BE5-A3C0-2179EE122FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,7 +71,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{80BC815C-C09A-4982-9CCB-45E2F9EF848B} = {63CB5EE1-8CB8-440C-9B41-DEBB449CEA7D}
 		{36786969-7060-47C9-A68C-0BF1B4694490} = {3F954E28-2868-42B2-B16B-E0414A910FE3}
-		{AC537623-6FFB-484A-BE8A-BA3E94A8043E} = {3F954E28-2868-42B2-B16B-E0414A910FE3}
 		{09523A6B-6F26-4BE5-A3C0-2179EE122FF1} = {3F954E28-2868-42B2-B16B-E0414A910FE3}
 		{AF91042E-E303-46EC-A524-BF014F24353B} = {A6F3F4AE-22A2-4CAC-8C60-2C9F7B013715}
 		{C32FB2AC-B15F-4F2C-B430-C940063FC470} = {A6F3F4AE-22A2-4CAC-8C60-2C9F7B013715}

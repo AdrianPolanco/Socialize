@@ -8,7 +8,6 @@ namespace Socialize.Core.Domain.Entities
     {
         public Guid UserId { get; set; }
         public User User { get; set; }
-
         public Guid FriendId { get; set; }
         public User Friend { get; set; }
     }

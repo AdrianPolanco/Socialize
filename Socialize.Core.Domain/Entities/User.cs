@@ -11,7 +11,7 @@ namespace Socialize.Core.Domain.Entities
         public bool IsActived { get; set; }
         public List<Friendship> Friendships { get; set; }
         public List<Post> Posts { get; set; }
-        public List<VideoPost> VideoPosts { get; set; }
-        public List<ImagePost> ImagePosts { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Reply> Replies { get; set; }    
     }
 }

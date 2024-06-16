@@ -42,8 +42,9 @@ public class PhoneNumber: ValueObject
 
     private string NormalizePhoneNumber(string value)
     {
-        // Eliminar espacios, paréntesis y guiones
-        return Regex.Replace(value, @"[\s\(\)-]", string.Empty);
+        // Eliminar espacios, paréntesis, simbolos y guiones
+        string normalizedValue = Regex.Replace(value, @"[\s\(\)\-\+]", string.Empty);
+        return normalizedValue;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

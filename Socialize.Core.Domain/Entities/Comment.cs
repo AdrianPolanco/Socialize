@@ -13,6 +13,7 @@ namespace Socialize.Core.Domain.Entities
         public Guid PostId { get; set; }
         public Post Post { get; set; }
         public List<Reply> Replies { get; set; }
+
     }
 
 }
