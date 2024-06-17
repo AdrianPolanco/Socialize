@@ -8,9 +8,9 @@ using Socialize.Infrastructure.Identity.Models;
 
 namespace Socialize.Infrastructure.Identity.Context
 {
-    public class ApplicationIdentityDbContext: IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     {
-        public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : base(options) { 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { 
 
         }
 

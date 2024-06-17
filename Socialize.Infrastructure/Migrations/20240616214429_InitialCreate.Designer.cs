@@ -11,7 +11,7 @@ using Socialize.Infrastructure.Identity.Context;
 
 namespace Socialize.Infrastructure.Identity.Migrations
 {
-    [DbContext(typeof(ApplicationIdentityDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240616214429_InitialCreate")]
     partial class InitialCreate
     {

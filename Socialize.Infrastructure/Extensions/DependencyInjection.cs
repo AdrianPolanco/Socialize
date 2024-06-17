@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
 using Socialize.Infrastructure.Identity.Models;
+using Socialize.Infrastructure.Identity.Repositories.Base;
 
 namespace Socialize.Infrastructure.Identity.Extensions
 {
@@ -14,7 +16,7 @@ namespace Socialize.Infrastructure.Identity.Extensions
         public static IServiceCollection AddIdentityPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             // Configurar los DbContext usando PooledDbContextFactory
-            services.AddPooledDbContextFactory<ApplicationIdentityDbContext>(options =>
+            services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("IdentityDatabase")));
 
             // Configurar Identity sin roles usando PooledDbContextFactory
@@ -29,15 +31,19 @@ namespace Socialize.Infrastructure.Identity.Extensions
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
             })
-                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Registrar el servicio de DbContext manualmente para resolver el servicio en tiempo de diseño
             services.AddTransient(provider =>
             {
-                var dbContextFactory = provider.GetRequiredService<IDbContextFactory<ApplicationIdentityDbContext>>();
+                var dbContextFactory = provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
                 return dbContextFactory.CreateDbContext();
             });
+
+            //Repositories
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IPartialRepository<>), typeof(PartialRepository<>));
 
             return services;
         }

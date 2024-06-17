@@ -10,7 +10,7 @@ using Socialize.Infrastructure.Identity.Context;
 
 namespace Socialize.Infrastructure.Identity.Migrations
 {
-    [DbContext(typeof(ApplicationIdentityDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
