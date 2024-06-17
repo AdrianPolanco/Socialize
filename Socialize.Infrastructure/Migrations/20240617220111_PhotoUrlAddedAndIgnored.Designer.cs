@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Socialize.Infrastructure.Identity.Context;
 
@@ -11,9 +12,11 @@ using Socialize.Infrastructure.Identity.Context;
 namespace Socialize.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240617220111_PhotoUrlAddedAndIgnored")]
+    partial class PhotoUrlAddedAndIgnored
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -585,9 +588,6 @@ namespace Socialize.Infrastructure.Identity.Migrations
                                 .HasColumnName("Email");
 
                             b1.HasKey("UserId");
-
-                            b1.HasIndex("Value")
-                                .IsUnique();
 
                             b1.ToTable("Users", "Domain");
 

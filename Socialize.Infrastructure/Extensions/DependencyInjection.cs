@@ -4,10 +4,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Socialize.Core.Application.Services.Interfaces;
+using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
 using Socialize.Infrastructure.Identity.Models;
+using Socialize.Infrastructure.Identity.Repositories;
 using Socialize.Infrastructure.Identity.Repositories.Base;
+using Socialize.Infrastructure.Identity.Services;
 using System.Reflection;
 
 namespace Socialize.Infrastructure.Identity.Extensions
@@ -44,9 +48,14 @@ namespace Socialize.Infrastructure.Identity.Extensions
 
             //AutoMapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             //Repositories
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped(typeof(IPartialRepository<>), typeof(PartialRepository<>));
+
+            //Services
+            services.AddScoped<IFileUploader, FileUploader>();
 
             return services;
         }

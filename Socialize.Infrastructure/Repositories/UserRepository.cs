@@ -18,14 +18,14 @@ namespace Socialize.Infrastructure.Identity.Repositories
             _userManager = userManager;
             _mapper = mapper;
         }
-
         public override async Task<User> CreateAsync(User entity, CancellationToken cancellationToken)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(entity);
-            IdentityResult identityResult = await _userManager.CreateAsync(user, entity.Password);
-            ApplicationUser createdUser = await _userManager.FindByEmailAsync(entity.Email.Value);
+            user.Id = Guid.NewGuid().ToString();
+            await _userManager.CreateAsync(user, entity.Password);
+            ApplicationUser createdUser = await _userManager.FindByNameAsync(entity.Username);
             User domainUser = _mapper.Map<User>(createdUser);
-            domainUser.Password = entity.Password;
+            domainUser.Id = Guid.Parse(createdUser.Id);
             
             return await base.CreateAsync(domainUser, cancellationToken);
         }

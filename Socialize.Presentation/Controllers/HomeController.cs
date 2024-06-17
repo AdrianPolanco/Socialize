@@ -1,16 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Socialize.Core.Application.Services.Base;
+using Socialize.Core.Application.UseCases.CreateNewUser;
+using Socialize.Core.Domain.Entities;
+using Socialize.Presentation.Extensions;
 using Socialize.Presentation.Models;
+using Socialize.Presentation.Models.Users;
 using System.Diagnostics;
 
 namespace Socialize.Presentation.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ICreateNewUserUseCase _createNewUserUseCase;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMapper mapper, ICreateNewUserUseCase createNewUserUseCase)
         {
-            _logger = logger;
+            _mapper = mapper;
+            _createNewUserUseCase = createNewUserUseCase;
         }
 
         public IActionResult Index()
@@ -18,9 +26,18 @@ namespace Socialize.Presentation.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
-            return View();
+            if(!ModelState.IsValid) return View(registerUserViewModel);
+
+            (Stream stream, string fileName) = await registerUserViewModel.Image.ConvertToStreamAsync(cancellationToken);
+
+            User user = _mapper.Map<User>(registerUserViewModel);
+            user.PhotoUrl = fileName;
+
+            await _createNewUserUseCase.ExecuteAsync(user, stream, fileName, cancellationToken);
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

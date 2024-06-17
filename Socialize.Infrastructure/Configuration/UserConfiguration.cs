@@ -11,11 +11,13 @@ namespace Socialize.Infrastructure.Identity.Configuration
             builder.ToTable("Users", "Domain"); 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Username).IsRequired().HasMaxLength(50);
+            builder.HasIndex(x => x.Username).IsUnique();
             builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Lastname).IsRequired().HasMaxLength(100);
             builder.OwnsOne(x => x.Email, y =>
             {
                 y.Property(x => x.Value).HasColumnName("Email").IsRequired().HasMaxLength(100);
+                y.HasIndex(y => y.Value).IsUnique();
             });
             builder.OwnsOne(x => x.PhoneNumber, y =>
             {
@@ -23,6 +25,7 @@ namespace Socialize.Infrastructure.Identity.Configuration
             });
             builder.Property(x => x.IsActived).IsRequired().HasDefaultValue(false);
             builder.Ignore(x => x.Password);
+            builder.Ignore(x => x.PhotoUrl);
 
             builder.HasMany(x => x.Friendships)
                 .WithOne(x => x.User)

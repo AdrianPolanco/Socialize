@@ -1,3 +1,4 @@
+using Socialize.Core.Application.Extensions;
 using Socialize.Infrastructure.Identity.Extensions;
 using Socialize.Presentation.Extensions;
 
@@ -5,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplication();
 builder.Services.AddIdentityPersistence(builder.Configuration);
 builder.Services.AddPresentation();
 

@@ -17,6 +17,8 @@ namespace Socialize.Infrastructure.Identity.Mappers
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Lastname, opt => opt.MapFrom(src => src.Lastname))
                 .ForMember(dest => dest.Deleted, opt => opt.MapFrom(src => src.Deleted))
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.PhotoUrl))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber.Value))
                 .ReverseMap();
         }
     }
