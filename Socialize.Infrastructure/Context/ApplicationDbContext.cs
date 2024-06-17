@@ -24,6 +24,7 @@ namespace Socialize.Infrastructure.Identity.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasDefaultSchema("Identity");
+            builder.Entity<ApplicationUser>().HasQueryFilter(u => !u.Deleted);   
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new PostConfiguration());

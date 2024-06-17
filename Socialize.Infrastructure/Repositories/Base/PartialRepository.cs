@@ -14,7 +14,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
         {
             _dbContextFactory = dbContextFactory;
         }
-        public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
+        public virtual async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
         {
             using var context = _dbContextFactory.CreateDbContext();
             try
@@ -31,7 +31,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
             }
         }
 
-        public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, params Expression<Func<T, object>>[] includes)
+        public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, params Expression<Func<T, object>>[] includes)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
             }
         }
 
-        public async Task<ICollection<T>> GetByPagesAsync(Guid lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
+        public virtual async Task<ICollection<T>> GetByPagesAsync(Guid lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
         { 
             int pageSize = 10;
             using var context = _dbContextFactory.CreateDbContext();

@@ -8,6 +8,7 @@ using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Infrastructure.Identity.Repositories.Base;
+using System.Reflection;
 
 namespace Socialize.Infrastructure.Identity.Extensions
 {
@@ -41,6 +42,8 @@ namespace Socialize.Infrastructure.Identity.Extensions
                 return dbContextFactory.CreateDbContext();
             });
 
+            //AutoMapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             //Repositories
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IPartialRepository<>), typeof(PartialRepository<>));

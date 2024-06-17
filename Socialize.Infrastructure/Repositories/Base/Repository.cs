@@ -11,7 +11,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
         {
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             using var context = _dbContextFactory.CreateDbContext();
             try
@@ -31,7 +31,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
             }
         }
 
-        public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
+        public virtual async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             using var context = _dbContextFactory.CreateDbContext();
             try
