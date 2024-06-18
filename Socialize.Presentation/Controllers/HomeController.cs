@@ -38,6 +38,11 @@ namespace Socialize.Presentation.Controllers
             return View();
         }
 
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
             if(!ModelState.IsValid) return View("Index", registerUserViewModel);
