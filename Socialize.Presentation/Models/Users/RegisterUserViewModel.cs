@@ -42,7 +42,7 @@ namespace Socialize.Presentation.Models.Users
         [Required(ErrorMessage = "Confirm password is required")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "the profile picture is required")]
+        [Required(ErrorMessage = "The profile picture is required")]
         [DataType(DataType.Upload)]
         public IFormFile Image { get; set; }
 

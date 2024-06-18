@@ -28,7 +28,7 @@ namespace Socialize.Presentation.Controllers
 
         public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid) return View(registerUserViewModel);
+            if(!ModelState.IsValid) return View("Index", registerUserViewModel);
 
             (Stream stream, string fileName) = await registerUserViewModel.Image.ConvertToStreamAsync(cancellationToken);
 

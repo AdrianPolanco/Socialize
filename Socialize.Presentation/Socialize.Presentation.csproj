@@ -36,4 +36,8 @@
     <ProjectReference Include="..\Socialize.Infrastructure\Socialize.Infrastructure.Identity.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Users\" />
+  </ItemGroup>
+
 </Project>
