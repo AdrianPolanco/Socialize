@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Socialize.Infrastructure.Identity.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h1>Bienvenido @user.Name @user.Lastname</h1>
+

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Socialize.Core.Application.Adapters;
-using Socialize.Core.Application.Services.Base;
 using Socialize.Core.Application.UseCases.CreateNewUser;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
@@ -10,6 +9,7 @@ using Socialize.Infrastructure.Identity.Models;
 using Socialize.Infrastructure.Shared.Services.Interfaces;
 using Socialize.Presentation.Extensions;
 using Socialize.Presentation.Helpers;
+using Socialize.Presentation.Middlewares;
 using Socialize.Presentation.Models;
 using Socialize.Presentation.Models.Users;
 using System.Diagnostics;
@@ -21,28 +21,77 @@ namespace Socialize.Presentation.Controllers
         private readonly ICreateNewUserUseCase _createNewUserUseCase;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager; 
         private readonly IEmailSender _emailSender;
         private readonly IRepository<User> _userRepository; 
 
-        public HomeController(IMapper mapper, ICreateNewUserUseCase createNewUserUseCase, UserManager<ApplicationUser> userManager, IEmailSender emailSender, IRepository<User> repository)
+        public HomeController(IMapper mapper, 
+            ICreateNewUserUseCase createNewUserUseCase,
+            UserManager<ApplicationUser> userManager, 
+            IEmailSender emailSender, 
+            IRepository<User> repository,
+            SignInManager<ApplicationUser> signInManager)
         {
             _mapper = mapper;
             _createNewUserUseCase = createNewUserUseCase;
             _userManager = userManager;
             _emailSender = emailSender;
             _userRepository = repository;
+            _signInManager = signInManager;
         }
 
+        [RedirectToPostsFilter]
         public IActionResult Index()
         {
             return View();
         }
 
+        [RedirectToPostsFilter]
         public IActionResult SignUp()
         {
             return View();
         }
 
+        [RedirectToPostsFilter]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginUserViewModel loginUserViewModel)
+        {
+            if(!ModelState.IsValid) return View("Index", loginUserViewModel);
+
+            ApplicationUser user = await _userManager.FindByNameAsync(loginUserViewModel.Username);
+
+            if(user is null)
+            {
+                ModelState.AddModelError("Username", "Username not found");
+                return View("Index", loginUserViewModel);
+            }
+
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError("Username", "Email not confirmed, please, verify your account using your email to be able to sign in.");
+                return View("Index", loginUserViewModel);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, loginUserViewModel.Password, true, true);
+
+            if(result.Succeeded) return RedirectToAction("Index", "Posts");
+
+            ModelState.AddModelError("Password", "Invalid password");
+            return View("Index", loginUserViewModel);
+  
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+
+        [RedirectToPostsFilter]
+        [AllowAnonymous]      
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
             if(!ModelState.IsValid) return View("Index", registerUserViewModel);
@@ -80,6 +129,7 @@ namespace Socialize.Presentation.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
 
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {

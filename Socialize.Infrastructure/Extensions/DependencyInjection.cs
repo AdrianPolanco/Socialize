@@ -25,7 +25,7 @@ namespace Socialize.Infrastructure.Identity.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("IdentityDatabase")));
 
             // Configurar Identity sin roles usando PooledDbContextFactory
-            services.AddIdentityCore<ApplicationUser>(options =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // Configuraciones de opciones de Identity
                 options.Password.RequireDigit = true;
@@ -33,11 +33,13 @@ namespace Socialize.Infrastructure.Identity.Extensions
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequiredLength = 8;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                options.Lockout.MaxFailedAccessAttempts = 3;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+             .AddEntityFrameworkStores<ApplicationDbContext>()
+             .AddDefaultTokenProviders();
 
             //AutoMapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());

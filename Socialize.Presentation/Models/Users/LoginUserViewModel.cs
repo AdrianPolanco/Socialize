@@ -10,5 +10,7 @@ namespace Socialize.Presentation.Models.Users
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+
+        public bool TriedToAccwssProtectedRoute { get; set; }
     }
 }
