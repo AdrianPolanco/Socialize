@@ -1,6 +1,10 @@
+
 using Socialize.Core.Application.Extensions;
 using Socialize.Infrastructure.Identity.Extensions;
+using Socialize.Infrastructure.Shared.Services.Interfaces;
+using Socialize.Infrastructure.Shared.Services;
 using Socialize.Presentation.Extensions;
+using Socialize.Infrastructure.Shared.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +13,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddApplication();
 builder.Services.AddIdentityPersistence(builder.Configuration);
 builder.Services.AddPresentation();
-
+// Configuración de Shared
+builder.Services.Configure<GoogleSettings>(builder.Configuration.GetSection("GoogleSettings"));
+builder.Services.AddTransient<GoogleService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
