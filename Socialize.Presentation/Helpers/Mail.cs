@@ -2,16 +2,12 @@
 {
     public static class Mail
     {
-        public static string GenerateMailTemplate(string message, string callbackUrl)
+        public static string GenerateMailTemplate(string name, string message, string callbackUrl)
         {
             return @$"
                     <section class=""max-w-2xl px-6 py-8 mx-auto bg-white dark:bg-gray-900"">
-                        <header>
-                                <a class=""navbar-brand font-semibold text-red-600 font-body font-sans text-3xl"" href=""/Home/Index"">Socialize</a>
-                        </header>
-
                         <main class=""mt-8"">
-                            <h2 class=""text-gray-700 dark:text-gray-200"">Hi Olivia,</h2>
+                            <h2 class=""text-gray-700 dark:text-gray-200"">Hi {name},</h2>
 
                             <p class=""mt-2 leading-loose text-gray-600 dark:text-gray-300"">
                                 We’re glad to have you onboard! {message}.

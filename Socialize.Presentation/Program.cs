@@ -14,8 +14,7 @@ builder.Services.AddApplication();
 builder.Services.AddIdentityPersistence(builder.Configuration);
 builder.Services.AddPresentation();
 // Configuración de Shared
-builder.Services.Configure<GoogleSettings>(builder.Configuration.GetSection("GoogleSettings"));
-builder.Services.AddTransient<GoogleService>();
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 var app = builder.Build();
 

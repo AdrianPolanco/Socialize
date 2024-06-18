@@ -1,8 +1,5 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Apis.Auth.OAuth2.Flows;
-using Google.Apis.Auth.OAuth2.Responses;
+﻿
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Socialize.Infrastructure.Shared.Services.Interfaces;
@@ -12,58 +9,30 @@ namespace Socialize.Infrastructure.Shared.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly GoogleSettings _googleSettings;
+        private readonly SmtpSettings _smtpSettings;
 
-        public EmailSender(IOptions<GoogleSettings> googleSettings)
+        public EmailSender(IOptions<SmtpSettings> smtpSettings)
         {
-            _googleSettings = googleSettings.Value;
+            _smtpSettings = smtpSettings.Value;
         }
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var tokenResponse = await GetTokenAsync();
-            var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(_googleSettings.SenderName, _googleSettings.SenderEmail));
-            emailMessage.To.Add(new MailboxAddress("",email));
+
+            MimeMessage emailMessage = new();
+
+            emailMessage.From.Add(new MailboxAddress(_smtpSettings.SenderName, _smtpSettings.SenderEmail));
+            emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
 
-            var bodyBuilder = new BodyBuilder { HtmlBody = htmlMessage };
+            BodyBuilder bodyBuilder = new() { HtmlBody = message };
             emailMessage.Body = bodyBuilder.ToMessageBody();
 
-            using var client = new SmtpClient();
-            try
-            {
-                await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync("oauth2", tokenResponse.AccessToken);
-                await client.SendAsync(emailMessage);
-            }
-            finally
-            {
-                await client.DisconnectAsync(true);
-            }
+            using SmtpClient client = new();
 
-        }
-
-        private async Task<TokenResponse> GetTokenAsync()
-        {
-            var secrets = new ClientSecrets
-            {
-                ClientId = _googleSettings.ClientId,
-                ClientSecret = _googleSettings.ClientSecret
-            };
-
-            var token = new TokenResponse
-            {
-                RefreshToken = _googleSettings.RefreshToken
-            };
-
-            var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
-            {
-                ClientSecrets = secrets
-            });
-
-            var tokenResponse = await flow.RefreshTokenAsync("", token.RefreshToken, CancellationToken.None);
-
-            return tokenResponse;
+            await client.ConnectAsync(_smtpSettings.Server, _smtpSettings.Port, true);
+            await client.AuthenticateAsync(_smtpSettings.UserName, _smtpSettings.Password);
+            await client.SendAsync(emailMessage);
+            await client.DisconnectAsync(true);
         }
     }
 }

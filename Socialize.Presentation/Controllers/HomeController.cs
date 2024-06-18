@@ -55,10 +55,10 @@ namespace Socialize.Presentation.Controllers
             if(result)
             {
                 ApplicationUser createdUser = await _userManager.FindByNameAsync(user.Username);
-                var code = _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = createdUser.Id, code }, protocol: Request.Scheme);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
+                var callbackUrl = Url.Action("ConfirmEmail", "Home", new { userId = createdUser.Id, code }, protocol: Request.Scheme);
 
-                string emailTemplate = Mail.GenerateMailTemplate("Please confirm your account in order to start using Socialize", callbackUrl);
+                string emailTemplate = Mail.GenerateMailTemplate($"{createdUser.Name} {createdUser.Lastname}","Please confirm your account in order to start using Socialize", callbackUrl);
 
                 await _emailSender.SendEmailAsync(createdUser.Email, "Confirm your account - Socialize", emailTemplate);
             }
@@ -74,26 +74,17 @@ namespace Socialize.Presentation.Controllers
 
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            if (userId == null || code == null) return RedirectToAction("Index", "Home");
+            
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{userId}'.");
-            }
+            if (user == null) return NotFound($"Unable to load user with ID '{userId}'.");
+            
 
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-            {
-                return View("ConfirmedEmail");
-            }
-            else
-            {
-                return View("Error");
-            }
+            if (result.Succeeded) return View("ConfirmedEmail");
+            else return View("Error");
+            
         }
 
     }
