@@ -21,7 +21,7 @@ namespace Socialize.Infrastructure.Identity.Extensions
         public static IServiceCollection AddIdentityPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             // Configurar los DbContext usando PooledDbContextFactory
-            services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
+            services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("IdentityDatabase")));
 
             // Configurar Identity sin roles usando PooledDbContextFactory
@@ -38,13 +38,6 @@ namespace Socialize.Infrastructure.Identity.Extensions
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            // Registrar el servicio de DbContext manualmente para resolver el servicio en tiempo de diseño
-            services.AddTransient(provider =>
-            {
-                var dbContextFactory = provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
-                return dbContextFactory.CreateDbContext();
-            });
 
             //AutoMapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());

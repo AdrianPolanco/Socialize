@@ -3,7 +3,13 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
+<div class="flex flex-col p-4">
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="rounded p-4 bg-green-300">
+        @TempData["SuccessMessage"]
+    </div>
+}
 <div class="flex flex-col md:flex-row  justify-center items-center w-full gap-x-12">
 
         <div class="flex flex-col items-center border border-1 border-red-500 rounded p-4">
@@ -93,7 +99,8 @@
                     </button>
                 </div>
             </form>
-        </div>
+    </div>
+</div>
 <script>
     function previewImage(event) {
         const file = event.target.files[0];

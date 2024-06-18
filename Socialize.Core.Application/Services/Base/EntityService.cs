@@ -1,6 +1,7 @@
 ﻿
 using Socialize.Core.Domain.Entities.Base;
 using Socialize.Core.Domain.Repositories.Base;
+using System.Linq.Expressions;
 
 namespace Socialize.Core.Application.Services.Base
 {
@@ -23,9 +24,9 @@ namespace Socialize.Core.Application.Services.Base
             return await _repository.UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly, Expression<Func<T, object>>[] includes)
         {
-            return await _repository.GetByIdAsync(id, cancellationToken);
+            return await _repository.GetByIdAsync(id, cancellationToken, readOnly, includes);
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)

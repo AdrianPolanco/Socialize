@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
@@ -13,7 +12,7 @@ namespace Socialize.Infrastructure.Identity.Repositories
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public UserRepository(IDbContextFactory<ApplicationDbContext> contextFactory, UserManager<ApplicationUser> userManager, IMapper mapper) : base(contextFactory)
+        public UserRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : base(context)
         {
             _userManager = userManager;
             _mapper = mapper;

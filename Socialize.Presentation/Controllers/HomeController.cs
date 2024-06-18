@@ -5,6 +5,7 @@ using Socialize.Core.Application.Adapters;
 using Socialize.Core.Application.Services.Base;
 using Socialize.Core.Application.UseCases.CreateNewUser;
 using Socialize.Core.Domain.Entities;
+using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Infrastructure.Shared.Services.Interfaces;
 using Socialize.Presentation.Extensions;
@@ -21,13 +22,15 @@ namespace Socialize.Presentation.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IRepository<User> _userRepository; 
 
-        public HomeController(IMapper mapper, ICreateNewUserUseCase createNewUserUseCase, UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public HomeController(IMapper mapper, ICreateNewUserUseCase createNewUserUseCase, UserManager<ApplicationUser> userManager, IEmailSender emailSender, IRepository<User> repository)
         {
             _mapper = mapper;
             _createNewUserUseCase = createNewUserUseCase;
             _userManager = userManager;
             _emailSender = emailSender;
+            _userRepository = repository;
         }
 
         public IActionResult Index()
@@ -61,6 +64,7 @@ namespace Socialize.Presentation.Controllers
                 string emailTemplate = Mail.GenerateMailTemplate($"{createdUser.Name} {createdUser.Lastname}","Please confirm your account in order to start using Socialize", callbackUrl);
 
                 await _emailSender.SendEmailAsync(createdUser.Email, "Confirm your account - Socialize", emailTemplate);
+                TempData["SuccessMessage"] = "Registration successful! Please check your email to confirm your account.";
             }
 
             return RedirectToAction("Index");
@@ -82,6 +86,9 @@ namespace Socialize.Presentation.Controllers
             
 
             var result = await _userManager.ConfirmEmailAsync(user, code);
+            var userEntity = await _userRepository.GetByIdAsync(Guid.Parse(userId), new CancellationToken());
+            userEntity.IsActived = true;
+            await _userRepository.UpdateAsync(userEntity, new CancellationToken());
             if (result.Succeeded) return View("ConfirmedEmail");
             else return View("Error");
             
