@@ -94,12 +94,12 @@ namespace Socialize.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid) return View("Index", registerUserViewModel);
+            if(!ModelState.IsValid) return View("SignUp", registerUserViewModel);
 
             ApplicationUser UserExists = await _userManager.FindByNameAsync(registerUserViewModel.Username);
             if (UserExists is not null) { 
                 ModelState.AddModelError("Username", "Username already exists");
-                return View("Index", registerUserViewModel);
+                return View("SignUp", registerUserViewModel);
             }
 
             (Stream stream, string fileName) = await registerUserViewModel.Image.ConvertToStreamAsync(cancellationToken);
@@ -121,7 +121,7 @@ namespace Socialize.Presentation.Controllers
                 TempData["SuccessMessage"] = "Registration successful! Please check your email to confirm your account.";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Sign Up");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
