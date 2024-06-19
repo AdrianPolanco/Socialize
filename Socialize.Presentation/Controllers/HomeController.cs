@@ -53,7 +53,6 @@ namespace Socialize.Presentation.Controllers
         }
 
         [RedirectToPostsFilter]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUserViewModel loginUserViewModel)
         {
@@ -89,8 +88,7 @@ namespace Socialize.Presentation.Controllers
             return RedirectToAction("Index");
         }
 
-        [RedirectToPostsFilter]
-        [AllowAnonymous]      
+        [RedirectToPostsFilter]  
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterUserViewModel registerUserViewModel, CancellationToken cancellationToken)
         {
@@ -121,7 +119,7 @@ namespace Socialize.Presentation.Controllers
                 TempData["SuccessMessage"] = "Registration successful! Please check your email to confirm your account.";
             }
 
-            return RedirectToAction("Sign Up");
+            return RedirectToAction("SignUp");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
