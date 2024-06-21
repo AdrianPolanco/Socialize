@@ -8,8 +8,6 @@ namespace Socialize.Core.Domain.Entities
         public DateTime CreatedAt { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
-        public Guid? AttachmentId { get; set; }
-        public Attachment? Attachment { get; set; }
         public List<Comment> Comments { get; set; }
     }
 

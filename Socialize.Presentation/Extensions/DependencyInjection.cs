@@ -3,6 +3,7 @@ using Socialize.Infrastructure.Identity.Adapters;
 using Socialize.Presentation.Adapters;
 using Socialize.Presentation.Filters;
 using Socialize.Presentation.Middlewares;
+using Socialize.Presentation.Services;
 
 namespace Socialize.Presentation.Extensions
 {
@@ -22,6 +23,8 @@ namespace Socialize.Presentation.Extensions
 
             services.AddScoped<RedirectToPostsFilterAttribute>();
             services.AddScoped<RedirectToLoginIfNotAuthenticatedAttribute>();
+
+            services.AddScoped<VideoValidator>();
             services.AddSession();
             return services;
         }

@@ -19,7 +19,7 @@ namespace Socialize.Presentation.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ICreateNewUserUseCase _createNewUserUseCase;
+        private readonly ICreateUserUseCase _createNewUserUseCase;
         private readonly IResetPasswordUseCase _resetPassword;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -28,7 +28,7 @@ namespace Socialize.Presentation.Controllers
         private readonly IRepository<User> _userRepository; 
 
         public HomeController(IMapper mapper, 
-            ICreateNewUserUseCase createNewUserUseCase,
+            ICreateUserUseCase createNewUserUseCase,
             IResetPasswordUseCase resetPassword,
             UserManager<ApplicationUser> userManager, 
             IEmailSender emailSender, 

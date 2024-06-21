@@ -5,13 +5,13 @@ using Socialize.Core.Domain.Entities;
 
 namespace Socialize.Core.Application.UseCases.CreateNewUser
 {
-    public class CreateNewUserUseCase : ICreateNewUserUseCase
+    public class CreateUserUseCase : ICreateUserUseCase
     {
         private readonly IUserManagerAdapter _userManagerAdapter;
         private readonly IEntityService<User> _userService; 
         private readonly IFileService<User> _fileService;
 
-        public CreateNewUserUseCase(IUserManagerAdapter userManagerAdapter, IEntityService<User> userService, IFileService<User> fileService)
+        public CreateUserUseCase(IUserManagerAdapter userManagerAdapter, IEntityService<User> userService, IFileService<User> fileService)
         {
             _userManagerAdapter = userManagerAdapter;
             _userService = userService;
