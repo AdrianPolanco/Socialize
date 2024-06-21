@@ -1,5 +1,6 @@
 ﻿
-namespace Socialize.Infrastructure.Shared.Services.Interfaces
+
+namespace Socialize.Core.Application.Services.Interfaces
 {
     public interface IEmailSender
     {

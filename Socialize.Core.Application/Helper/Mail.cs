@@ -1,4 +1,6 @@
-﻿namespace Socialize.Presentation.Helpers
+﻿
+
+namespace Socialize.Core.Application.Helper
 {
     public static class Mail
     {

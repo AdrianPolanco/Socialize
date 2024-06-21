@@ -19,6 +19,7 @@ namespace Socialize.Presentation.Extensions
             services.AddAutoMapper(typeof(Program).Assembly);
             services.AddScoped<IWebHostEnvironmentAdapter, WebHostEnvironmentAdapter>();
             services.AddScoped<IUserManagerAdapter, UserManagerAdapter>();
+
             services.AddScoped<RedirectToPostsFilterAttribute>();
             services.AddScoped<RedirectToLoginIfNotAuthenticatedAttribute>();
             services.AddSession();

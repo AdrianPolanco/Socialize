@@ -1,8 +1,10 @@
-﻿using System.Security.Cryptography;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 
-
-namespace Socialize.Infrastructure.Shared.Helpers
+namespace Socialize.Core.Application.Helper
 {
     public static class PasswordGenerator
     {
@@ -24,7 +26,7 @@ namespace Socialize.Infrastructure.Shared.Helpers
             "abcdefghijkmnopqrstuvwxyz",    // Lowercase
             "0123456789",                   // Digits
             "!@$?_-"                        // Non-alphanumeric
-        };
+            };
 
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             var chars = new char[opts.RequiredLength];
@@ -60,5 +62,4 @@ namespace Socialize.Infrastructure.Shared.Helpers
             return new string(chars);
         }
     }
-
 }

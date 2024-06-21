@@ -1,8 +1,7 @@
-﻿
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Socialize.Infrastructure.Shared.Services.Interfaces;
+using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Infrastructure.Shared.Settings;
 
 namespace Socialize.Infrastructure.Shared.Services

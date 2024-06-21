@@ -17,5 +17,14 @@ namespace Socialize.Infrastructure.Identity.Adapters
             ApplicationUser applicationUser = await _userManager.FindByNameAsync(username);
             return applicationUser != null;
         }
+
+        public async Task<bool> ResetPassword(string username, string newPassword)
+        {
+            ApplicationUser applicationUser = await _userManager.FindByNameAsync(username);
+            if (applicationUser == null) return false;
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+            IdentityResult result = await _userManager.ResetPasswordAsync(applicationUser, resetToken, newPassword);
+            return result.Succeeded;
+        }
     }
 }

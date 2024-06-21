@@ -1,22 +1,30 @@
-
+using Socialize.Infrastructure.Shared.Extensions;
 using Socialize.Core.Application.Extensions;
 using Socialize.Infrastructure.Identity.Extensions;
-using Socialize.Infrastructure.Shared.Services.Interfaces;
-using Socialize.Infrastructure.Shared.Services;
 using Socialize.Presentation.Extensions;
 using Socialize.Infrastructure.Shared.Settings;
-using Socialize.Presentation.Middlewares;
+using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<YouTubeService>(provider =>
+{
+    return new YouTubeService(new BaseClientService.Initializer
+    {
+        ApiKey = builder.Configuration["API_KEY"],
+        ApplicationName = builder.Configuration["APP_NAME"]
+    });
+});
 builder.Services.AddApplication();
 builder.Services.AddIdentityPersistence(builder.Configuration);
 builder.Services.AddPresentation();
 // Configuración de Shared
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddShared();
 
 var app = builder.Build();
 

@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Socialize.Core.Application.Helper;
+using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Core.Application.UseCases.CreateNewUser;
+using Socialize.Core.Application.UseCases.ResetPassword;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Models;
-using Socialize.Infrastructure.Shared.Helpers;
-using Socialize.Infrastructure.Shared.Services.Interfaces;
 using Socialize.Presentation.Extensions;
-using Socialize.Presentation.Helpers;
 using Socialize.Presentation.Middlewares;
 using Socialize.Presentation.Models;
 using Socialize.Presentation.Models.Users;
@@ -20,6 +20,7 @@ namespace Socialize.Presentation.Controllers
     public class HomeController : Controller
     {
         private readonly ICreateNewUserUseCase _createNewUserUseCase;
+        private readonly IResetPasswordUseCase _resetPassword;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager; 
@@ -28,6 +29,7 @@ namespace Socialize.Presentation.Controllers
 
         public HomeController(IMapper mapper, 
             ICreateNewUserUseCase createNewUserUseCase,
+            IResetPasswordUseCase resetPassword,
             UserManager<ApplicationUser> userManager, 
             IEmailSender emailSender, 
             IRepository<User> repository,
@@ -39,6 +41,7 @@ namespace Socialize.Presentation.Controllers
             _emailSender = emailSender;
             _userRepository = repository;
             _signInManager = signInManager;
+            _resetPassword = resetPassword;
         }
 
         [RedirectToPostsFilter]
@@ -165,17 +168,10 @@ namespace Socialize.Presentation.Controllers
                 return View("ResetPassword", resetUserPasswordViewModel);
             }
 
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var newPassword = PasswordGenerator.GenerateRandomPassword();
-            var result = await _userManager.ResetPasswordAsync(user, code, newPassword);
+            var result = await _resetPassword.ResetPassword(user.UserName, user.Email, user.Name, user.Lastname);
 
-            if(result.Succeeded)
-            {
-                string emailTemplate = Mail.GenerateResetPasswordMailTemplate($"{user.Name} {user.Lastname}", newPassword);
-
-                await _emailSender.SendEmailAsync(user.Email, "Password reset - Socialize", emailTemplate);
-                TempData["SuccessMessage"] = "Password reset successful! Please check your email to get your new password.";
-            }
+            if(result)  TempData["SuccessMessage"] = "Password reset successful! Please check your email to get your new password.";
+            else TempData["ErrorMessage"] = "An error occurred while trying to reset your password. Please try again later.";  
 
             return RedirectToAction("ResetPassword");
         }
