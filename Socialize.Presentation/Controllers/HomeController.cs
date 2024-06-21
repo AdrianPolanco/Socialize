@@ -6,6 +6,7 @@ using Socialize.Core.Application.UseCases.CreateNewUser;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Models;
+using Socialize.Infrastructure.Shared.Helpers;
 using Socialize.Infrastructure.Shared.Services.Interfaces;
 using Socialize.Presentation.Extensions;
 using Socialize.Presentation.Helpers;
@@ -145,6 +146,38 @@ namespace Socialize.Presentation.Controllers
             if (result.Succeeded) return View("ConfirmedEmail");
             else return View("Error");
             
+        }
+
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SendPassword(ResetUserPasswordViewModel resetUserPasswordViewModel)
+        {
+            if(!ModelState.IsValid) return View("ResetPassword", resetUserPasswordViewModel);   
+
+            ApplicationUser user = await _userManager.FindByNameAsync(resetUserPasswordViewModel.Username);
+
+            if(user is null)
+            {
+                ModelState.AddModelError("Username", "Username not found");
+                return View("ResetPassword", resetUserPasswordViewModel);
+            }
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var newPassword = PasswordGenerator.GenerateRandomPassword();
+            var result = await _userManager.ResetPasswordAsync(user, code, newPassword);
+
+            if(result.Succeeded)
+            {
+                string emailTemplate = Mail.GenerateResetPasswordMailTemplate($"{user.Name} {user.Lastname}", newPassword);
+
+                await _emailSender.SendEmailAsync(user.Email, "Password reset - Socialize", emailTemplate);
+                TempData["SuccessMessage"] = "Password reset successful! Please check your email to get your new password.";
+            }
+
+            return RedirectToAction("ResetPassword");
         }
 
     }

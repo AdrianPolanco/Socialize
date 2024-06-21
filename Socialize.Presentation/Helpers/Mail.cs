@@ -25,5 +25,10 @@
                         </main>
                     </section>.";
         }
+
+        public static string GenerateResetPasswordMailTemplate(string name, string message)
+        {
+            return @$"Hi {name}, your new password is: {message}";
+        }
     }
 }
