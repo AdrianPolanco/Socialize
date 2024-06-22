@@ -1,7 +1,9 @@
 ﻿@using AutoMapper
 @using Microsoft.AspNetCore.Identity
 @using Socialize.Core.Application.Dtos
+@using Socialize.Core.Application.Services.Base
 @using Socialize.Core.Application.UseCases.ReadPosts
+@using Socialize.Core.Domain.Entities
 @using Socialize.Core.Domain.Enums
 @using Socialize.Infrastructure.Identity.Models
 @using Socialize.Presentation.Enums
@@ -10,6 +12,7 @@
 @inject IMapper _mapper
 @inject UserManager<ApplicationUser> _userManager
 @inject IReadPostsUseCase _readPostsUseCase
+@inject IEntityService<Post> _postService
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
