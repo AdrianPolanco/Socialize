@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Socialize.Core.Application.Dtos;
+using Socialize.Core.Application.Services.Base;
+using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Core.Application.UseCases.CreatePost;
+using Socialize.Core.Application.UseCases.ReadPosts;
+using Socialize.Core.Domain.Entities;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Enums;
 using Socialize.Presentation.Extensions;
@@ -20,15 +26,18 @@ namespace Socialize.Presentation.Controllers
         private readonly ICreatePostUseCase _createPostUseCase;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly VideoValidator _videoValidator;
+        private readonly IPostService _postService;
+        private readonly IMapper _mapper;
 
-        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator)
+        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, IPostService postService)
         {
             _createPostUseCase = createPostUseCase;
             _userManager = userManager;
             _videoValidator = videoValidator;
+            _postService = postService;  
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }

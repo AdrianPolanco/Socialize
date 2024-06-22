@@ -33,5 +33,6 @@ namespace Socialize.Core.Application.Services.Base
         {
             await _repository.DeleteAsync(id, cancellationToken);
         }
+
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Socialize.Core.Application.Repositories;
 using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Repositories.Base;
@@ -48,6 +49,7 @@ namespace Socialize.Infrastructure.Identity.Extensions
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped(typeof(IPartialRepository<>), typeof(PartialRepository<>));
+            services.AddScoped<IPostRepository, PostRepository>();
 
             //Services
             services.AddScoped<IFileUploader, FileUploader>();

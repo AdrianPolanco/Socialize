@@ -17,8 +17,8 @@ namespace Socialize.Infrastructure.Identity.Configuration
                 .HasForeignKey(x => x.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Attachment)
-                .WithMany()
-                .HasForeignKey(x => x.AttachmentId)
+                .WithOne(x => x.Post)
+                .HasForeignKey<Attachment>(x => x.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
 

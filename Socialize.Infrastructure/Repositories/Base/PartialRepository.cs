@@ -57,9 +57,9 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
 
         }
 
-        public virtual async Task<ICollection<T>> GetByPagesAsync(Guid lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
+        public virtual async Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
         { 
-            int pageSize = 10;
+                int pageSize = 10;
 
                 DbSet<T> _dbSet = _context.Set<T>();
                 IQueryable<T> query = _dbSet.AsQueryable();

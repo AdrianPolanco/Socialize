@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Socialize.Core.Domain\Socialize.Core.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
 </Project>

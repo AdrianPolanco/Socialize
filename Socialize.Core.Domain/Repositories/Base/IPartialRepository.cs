@@ -7,7 +7,7 @@ namespace Socialize.Core.Domain.Repositories.Base
     {
         Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
         Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, params Expression<Func<T, object>>[] includes);
-        Task<ICollection<T>> GetByPagesAsync(Guid lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null,
+        Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null,
             params Expression<Func<T, object>>[] includes);
     }
 }
