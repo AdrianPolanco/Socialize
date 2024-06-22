@@ -11,9 +11,9 @@ namespace Socialize.Core.Application.UseCases.ReadPosts
         {
             _postService = postService;
         }
-        public async Task<PostsPageDto> GetPosts(Guid? id, CancellationToken cancellationToken)
+        public async Task<PostsPageDto> GetPosts(Guid? id, bool isNextPage, Guid? currentPageId, CancellationToken cancellationToken)
         {
-            PostsPageDto postsPageDto = await _postService.GetPosts(null, true, 5, default, true, p => p.UserId == id);
+            PostsPageDto postsPageDto = await _postService.GetPosts(currentPageId, isNextPage, 5, default, true, p => p.UserId == id);
 
             return postsPageDto;
         }

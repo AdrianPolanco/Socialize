@@ -17,7 +17,7 @@ namespace Socialize.Core.Application.Services
 
         public async Task<PostsPageDto> GetPosts(Guid? id, bool isNextPage, int pageSize, CancellationToken cancellationToken, bool readOnly, Expression<Func<Post, bool>> filter = null)
         {
-            GetPostsDto getPostsDto = new GetPostsDto(id, isNextPage, pageSize);
+            GetPostsDto getPostsDto = new GetPostsDto(id, null, isNextPage, pageSize);
             return await _postRepository.GetPosts(getPostsDto, cancellationToken, readOnly, filter);
         }
     }

@@ -37,12 +37,17 @@ namespace Socialize.Presentation.Controllers
             _postService = postService;  
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid? currentPageId, bool isNextPage)
         {
-            return View();
+            MainViewModel mainViewModel = new MainViewModel
+            {
+                CurrentPageId = currentPageId,
+                IsNextPage = isNextPage
+            };
+            return View(mainViewModel);
         }
 
-        public async Task<IActionResult> Create(CreatePostViewModel createPostViewModel, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(MainViewModel createPostViewModel, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return View("Index", createPostViewModel);
 
