@@ -10,7 +10,7 @@ namespace Socialize.Presentation.Models.Posts
         public string CreatedAtFormatted { get; set; }
         public string Username { get; set; }
         public string UsernamePhoto { get; set; }
-        public AttachmentTypes Type { get; set; }
+        public AttachmentTypes? Type { get; set; }
         public int CommentsCount { get; set; }
         public string? AttachmentUrl { get; set; }
     }

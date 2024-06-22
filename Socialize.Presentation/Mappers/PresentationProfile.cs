@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Socialize.Core.Application.Dtos;
 using Socialize.Core.Domain.Entities;
+using Socialize.Core.Domain.Enums;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Models.Posts;
 using Socialize.Presentation.Models.Users;
@@ -45,7 +46,7 @@ namespace Socialize.Presentation.Mappers
                 .ForCtorParam("CreatedAt", opt => opt.MapFrom(src => src.CreatedAt))
                 .ForCtorParam("Username", opt => opt.MapFrom(src => src.Username))
                 .ForCtorParam("UsernamePhotoUrl", opt => opt.MapFrom(src => src.UsernamePhoto))
-                .ForCtorParam("Type", opt => opt.MapFrom(src => src.Type))
+                .ForCtorParam("Type", opt => opt.MapFrom(src => src.Type != null? src.Type: null))
                 .ForCtorParam("CommentsCount", opt => opt.MapFrom(src => src.CommentsCount))
                 .ForCtorParam("AttachmentUrl", opt => opt.MapFrom(src => src.AttachmentUrl));
 

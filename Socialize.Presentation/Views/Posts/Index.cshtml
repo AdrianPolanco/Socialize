@@ -13,7 +13,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
-
+    var articleClass = "bg-white border rounded max-w-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2";
     ApplicationUser currentUser = await _userManager.GetUserAsync(User);
     Guid currentUserId = Guid.Parse(currentUser.Id);
     PostsPageDto postsPageDto = await _readPostsUseCase.GetPosts(currentUserId, new CancellationToken());
@@ -92,7 +92,7 @@
             {
                 if (postViewModel.Type == AttachmentTypes.Image)
                 { 
-                    <article class="bg-white border rounded max-w-md">
+                    <article class="@articleClass">
                         <div class="flex justify-between items-center p-2">
                             <div class="flex items-center px-4 py-3 gap-x-1">
                                 <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
@@ -120,7 +120,7 @@
                 }
                 else if (postViewModel.Type == AttachmentTypes.Video)
                 {
-                    <article class="bg-white border rounded max-w-md">
+                    <article class="@articleClass">
                         <div class="flex justify-between items-center p-2">
                             <div class="flex items-center px-4 py-3 gap-x-1">
                                 <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
@@ -154,7 +154,7 @@
                 }
                 else
                 {
-                    <article class="bg-white border rounded max-w-md">
+                    <article class="@articleClass">
                         <div class="flex justify-between items-center p-2">
                             <div class="flex items-center px-4 py-3 gap-x-1">
                                 <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />

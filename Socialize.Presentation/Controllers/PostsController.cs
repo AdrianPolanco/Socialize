@@ -75,6 +75,7 @@ namespace Socialize.Presentation.Controllers
                     ModelState.AddModelError("VideoUrl", "The video was not found. Please make sure the video exists and the url is correct.");
                     return View("Index", createPostViewModel);
                 }
+                attachmentUrl = createPostViewModel.VideoUrl;
             }   
 
             Guid userId = Guid.Parse(_userManager.GetUserId(User));

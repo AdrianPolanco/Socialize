@@ -25,7 +25,7 @@ namespace Socialize.Infrastructure.Identity.Configuration
             });
             builder.Property(x => x.IsActived).IsRequired().HasDefaultValue(false);
             builder.Ignore(x => x.Password);
-            builder.Ignore(x => x.PhotoUrl);
+            builder.Property(x => x.PhotoUrl).IsRequired().HasMaxLength(100);
 
             builder.HasMany(x => x.Friendships)
                 .WithOne(x => x.User)

@@ -9,7 +9,7 @@ namespace Socialize.Core.Application.Dtos
         DateTime CreatedAt,
         string Username,
         string UsernamePhotoUrl,
-        AttachmentTypes Type,
+        AttachmentTypes? Type,
         int CommentsCount,
         string? AttachmentUrl
         );

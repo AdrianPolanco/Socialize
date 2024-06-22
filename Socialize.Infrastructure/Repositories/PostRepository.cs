@@ -57,7 +57,7 @@ namespace Socialize.Infrastructure.Identity.Repositories
             query = query.Take(takeAmount);
 
             // Incluir entidades relacionadas (User y Comments)
-            query = query.Include(p => p.User).Include(p => p.Comments);
+            query = query.Include(p => p.User).Include(p => p.Comments).Include(p => p.Attachment);
 
             // Aplicar AsNoTracking si se solicita solo lectura
             if (readOnly)
