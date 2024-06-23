@@ -14,6 +14,7 @@ using Socialize.Presentation.Extensions;
 using Socialize.Presentation.Filters;
 using Socialize.Presentation.Models.Posts;
 using Socialize.Presentation.Services;
+using System.Linq.Expressions;
 
 namespace Socialize.Presentation.Controllers
 {
@@ -28,13 +29,16 @@ namespace Socialize.Presentation.Controllers
         private readonly VideoValidator _videoValidator;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
+        private readonly IEntityService<Post> _postEntityService;
 
-        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, IPostService postService)
+        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, IPostService postService, IEntityService<Post> entityService, IMapper mapper)
         {
             _createPostUseCase = createPostUseCase;
             _userManager = userManager;
             _videoValidator = videoValidator;
             _postService = postService;  
+            _postEntityService = entityService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index(Guid? currentPageId, bool isNextPage)
@@ -89,6 +93,22 @@ namespace Socialize.Presentation.Controllers
             await _createPostUseCase.ExecuteAsync(userId, createPostViewModel.Content, cancellationToken, _stream, attachmentUrl);
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken)
+        {
+            Expression<Func<Post, object>>[] includes = new Expression<Func<Post, object>>[]
+            {
+                p => p.User,
+                p => p.Comments,
+                p => p.Attachment
+            };
+
+            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, true, includes);
+
+            PostDetailViewModel postDetailViewModel = _mapper.Map<PostDetailViewModel>(post);
+
+            return View(postDetailViewModel);
         }
     }
 }

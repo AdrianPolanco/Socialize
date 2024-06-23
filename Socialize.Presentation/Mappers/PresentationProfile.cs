@@ -27,6 +27,18 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password))
                 .ReverseMap();
 
+            CreateMap<Post, PostDetailViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt:MMMM dd, yyyy} at {src.CreatedAt:HH:mm}"))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Name))
+                .ForMember(dest => dest.UsernamePhoto, opt => opt.MapFrom(src => src.User.PhotoUrl))
+                .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.Comments.Count))
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
+                .ForMember(dest => dest.AttachmentUrl, opt => opt.MapFrom(src => src.Attachment.Url))
+                .ReverseMap();
+
             // Mapeo de PostDto a PostViewModel
             CreateMap<PostDto, PostViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
