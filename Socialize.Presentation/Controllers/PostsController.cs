@@ -10,6 +10,7 @@ using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Enums;
 using Socialize.Presentation.Extensions;
 using Socialize.Presentation.Filters;
+using Socialize.Presentation.Models.Comments;
 using Socialize.Presentation.Models.Posts;
 using Socialize.Presentation.Services;
 using System.Linq.Expressions;
@@ -127,5 +128,31 @@ namespace Socialize.Presentation.Controllers
 
 			return RedirectToAction("Details", new { id = postId });
 		}
+
+        public async Task<IActionResult> CommentDetails(Guid id, CancellationToken cancellationToken)
+        {
+			Guid currentUserId = Guid.Parse(_userManager.GetUserId(User));
+
+            Comment comment = await _commentService.GetCommentById(id, cancellationToken);
+
+            CommentViewModel commentViewModel = _mapper.Map<CommentViewModel>(comment);
+
+            ICollection<Reply> repliesCollection = await _commentService.GetRepliesAsync(id, cancellationToken);
+            List<Reply> replies = repliesCollection.ToList();
+
+            commentViewModel.Replies = replies;
+            commentViewModel.RepliesCount = replies.Count;
+
+            return View(commentViewModel);
+		}
+
+        public async Task<IActionResult> Reply(Guid commentId, string content, CancellationToken cancellationToken)
+        {
+            Guid userId = Guid.Parse(_userManager.GetUserId(User));
+
+			await _commentService.ReplyAsync(commentId, userId, content, cancellationToken);
+
+			return RedirectToAction("CommentDetails", new { id = commentId });
+        }
     }
 }

@@ -3,6 +3,7 @@ using Socialize.Core.Application.Dtos;
 using Socialize.Core.Domain.Entities;
 using Socialize.Core.Domain.Enums;
 using Socialize.Infrastructure.Identity.Models;
+using Socialize.Presentation.Models.Comments;
 using Socialize.Presentation.Models.Posts;
 using Socialize.Presentation.Models.Users;
 using System.Globalization;
@@ -31,7 +32,7 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm", CultureInfo.InvariantCulture)}"))
+                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")}"))
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Name))
                 .ForMember(dest => dest.UsernamePhoto, opt => opt.MapFrom(src => src.User.PhotoUrl))
                 .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.Comments.Count))
@@ -40,12 +41,25 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.AttachmentType, opt => opt.MapFrom(src => src.Attachment.Type != null? src.Attachment.Type : (AttachmentTypes?)null))
                 .ReverseMap();
 
+            CreateMap<Comment, CommentViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.PostId, opt => opt.MapFrom(src => src.PostId))
+				.ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+				.ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+				.ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")}"))
+				.ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Name))
+				.ForMember(dest => dest.UsernamePhoto, opt => opt.MapFrom(src => src.User.PhotoUrl))
+				.ForMember(dest => dest.RepliesCount, opt => opt.MapFrom(src => src.Replies.Count))
+				.ForMember(dest => dest.Replies, opt => opt.MapFrom(src => src.Replies))
+				.ReverseMap();
+
+
             // Mapeo de PostDto a PostViewModel
             CreateMap<PostDto, PostViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm", CultureInfo.InvariantCulture)}"))
+                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")}"))
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
                 .ForMember(dest => dest.UsernamePhoto, opt => opt.MapFrom(src => src.UsernamePhotoUrl))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))

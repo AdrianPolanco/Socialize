@@ -16,6 +16,10 @@
 <!-- component -->
 <main class="h-full w-full bg-white flex items-center justify-center">
 	<div class="border max-w-screen-md bg-white mt-6 rounded-2xl p-4">
+        <a asp-controller="Posts" asp-action="Index" class="inline-flex items-center gap-x-2 text-red-500 mb-2">
+			<i class="fa-solid fa-arrow-left fa-2x text-red-500"></i>
+			<span>Atrás</span>
+		</a>
 		<div class="flex items-center	justify-between">
 			<div class="gap-3.5	flex items-center ">
 				<img src="@Model.UsernamePhoto" class="object-cover bg-yellow-500 rounded-full w-10 h-10" />
@@ -79,7 +83,7 @@
                                 @comment.Content
                             </div>
                             <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
-                                <a asp-controller="Posts" asp-action="Replies" asp-route-id="@comment.Id" class="flex items-center justify-start text-red-500 font-semibold">
+                                <a asp-controller="Posts" asp-action="CommentDetails" asp-route-id="@comment.Id" class="flex items-center justify-start text-red-500 font-semibold">
                                     @comment.Replies.Count Replies
                                 </a>
                             </div>

@@ -21,7 +21,7 @@ namespace Socialize.Infrastructure.Identity.Repositories
 		public async Task<Comment> GetCommentById(Guid commentId, CancellationToken cancellationToken)
 		{
 			IQueryable<Comment> query = _comments.Include(c => c.User).Include(c => c.Replies);
-			return await _comments.FirstOrDefaultAsync(c => c.Id == commentId, cancellationToken);
+			return await query.FirstOrDefaultAsync(c => c.Id == commentId, cancellationToken);
 		}
 
 		public async Task<ICollection<Comment>> GetCommentsByPostId(Guid postId, CancellationToken cancellationToken)
