@@ -24,9 +24,9 @@ namespace Socialize.Core.Application.Services.Base
             return await _repository.UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly, Expression<Func<T, object>>[] includes = null)
+        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly, bool ignoreQueryFilters = false, Expression<Func<T, object>>[] includes = null)
         {
-            return await _repository.GetByIdAsync(id, cancellationToken, readOnly, includes);
+            return await _repository.GetByIdAsync(id, cancellationToken, readOnly, ignoreQueryFilters, includes);
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)

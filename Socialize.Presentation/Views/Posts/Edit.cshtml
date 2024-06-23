@@ -1,0 +1,132 @@
+﻿@using Socialize.Core.Domain.Enums
+@using Socialize.Presentation.Enums
+@using Socialize.Presentation.Models.Posts
+@model EditPostViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
+}
+<main class="bg-white flex items-center justify-center">
+    <form id="postForm" asp-controller="Posts" asp-action="Update" enctype="multipart/form-data">
+        <!-- Post Content Section -->
+        <div class="mb-6">
+            <label asp-for="Content" class="block text-gray-700 text-sm font-bold mb-2">Post Content:</label>
+            <textarea asp-for="Content" id="postContent" rows="4" class="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500" placeholder="What's on your mind?"></textarea>
+            <span asp-validation-for="Content" class="text-red-500"></span>
+        </div>
+
+            @if (Model is not null && Model.Attachment is not null && Model.Attachment.Type == AttachmentTypes.Image)
+            { 
+                <div class="mb-6 w-72 h-72">
+                    <img src="@Model.Attachment.Url" class="w-full rounded-md" />
+                </div>
+            }else if(Model is not null && Model.Attachment is not null && Model.Attachment.Type == AttachmentTypes.Video)
+            {
+                <div class="mb-6">
+                    <iframe src="@Model.Attachment.Url" class="w-full rounded-md" frameborder="0" allowfullscreen></iframe>
+                </div>
+            }
+        <input type="hidden" asp-for="Id" />
+        <!-- Option Select Section -->
+        <div class="mb-6">
+            <label asp-for="Mode" class="block text-gray-700 text-sm font-bold mb-2">Select Post Type:</label>
+            <select asp-for="Mode" id="postType" class="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 focus:outline-none focus:border-blue-500">
+                @if (Model is not null && Model.Attachment?.Type == AttachmentTypes.Image)
+                {
+                    <option value="@CreatePostModes.Text">Text Only</option>
+                    <option value="@CreatePostModes.Image" selected>Attach Image</option>
+                    <option value="@CreatePostModes.Video">Attach Video</option>
+                }
+                else if (Model is not null && Model.Attachment?.Type == AttachmentTypes.Video)
+                {
+                    <option value="@CreatePostModes.Text">Text Only</option>
+                    <option value="@CreatePostModes.Image">Attach Image</option>
+                    <option value="@CreatePostModes.Video" selected>Attach Video</option>
+                }
+                else
+                {
+                    <option value="@CreatePostModes.Text">Text Only</option>
+                    <option value="@CreatePostModes.Image">Attach Image</option>
+                    <option value="@CreatePostModes.Video">Attach Video</option>
+                }
+
+            </select>
+        </div>
+        <!-- Dynamic Components Section -->
+        <div id="imageComponent" class="hidden mb-6">
+            <label asp-for="Image" class="block text-gray-700 text-sm font-bold mb-2">Attach Image:</label>
+            <div class="relative border-2 rounded-md px-4 py-3 bg-white flex items-center justify-between hover:border-blue-500 transition duration-150 ease-in-out">
+                <input type="file" asp-for="Image" id="fileAttachment" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="ml-2 text-sm text-gray-600">Choose a file</span>
+                </div>
+                <span class="text-sm text-gray-500">Max file size: 5MB</span>
+            </div>
+             <img id="imagePreview" class="mt-4 w-full hidden rounded-md h-72 w-72" />
+            <span asp-validation-for="Image" class="text-red-500"></span>
+        </div>
+        <div id="videoComponent" class="hidden mb-6">
+            <label asp-for="VideoUrl" for="videoUrl" class="block text-gray-700 text-sm font-bold mb-2">YouTube Video URL:</label>
+            <input asp-for="VideoUrl" type="url" id="videoUrl" name="videoUrl" class="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 focus:outline-none focus:border-blue-500" placeholder="Enter YouTube URL">
+            <span asp-validation-for="VideoUrl" class="text-red-500"></span>
+        </div>
+        <!-- Submit Button and Character Limit Section -->
+        <div class="flex items-center justify-between">
+            <button type="submit" class="flex justify-center items-center bg-red-500 hover:bg-red-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2">
+                Post <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" id="send" fill="#fff">
+                    <path fill="none" d="M0 0h24v24H0V0z"></path>
+                    <path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"></path>
+                </svg>
+            </button>
+        </div>
+    </form>
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const postTypeSelect = document.getElementById('postType');
+        const imageComponent = document.getElementById('imageComponent');
+        const videoComponent = document.getElementById('videoComponent');
+        const imagePreview = document.getElementById('imagePreview');
+        const fileInput = document.getElementById('fileAttachment');
+
+        // Función para mostrar el componente adecuado
+        function showComponent(selectedType) {
+            imageComponent.classList.add('hidden');
+            videoComponent.classList.add('hidden');
+
+            if (selectedType === "Image") {
+                imageComponent.classList.remove('hidden');
+            } else if (selectedType === "Video") {
+                videoComponent.classList.remove('hidden');
+            }
+        }
+
+        // Manejar el cambio de tipo de publicación
+        postTypeSelect.addEventListener('change', function () {
+            const selectedType = postTypeSelect.value;
+            showComponent(selectedType);
+        });
+
+        // Mostrar la vista previa de la imagen seleccionada
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.classList.add('hidden');
+            }
+        });
+
+        // Establecer el modo seleccionado al cargar la página
+        const selectedTypeOnLoad = postTypeSelect.value;
+        showComponent(selectedTypeOnLoad);
+    });
+</script>

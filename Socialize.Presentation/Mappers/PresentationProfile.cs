@@ -41,6 +41,12 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.AttachmentType, opt => opt.MapFrom(src => src.Attachment.Type != null? src.Attachment.Type : (AttachmentTypes?)null))
                 .ReverseMap();
 
+            CreateMap<Post, EditPostViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ReverseMap();
+
             CreateMap<Comment, CommentViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.PostId, opt => opt.MapFrom(src => src.PostId))

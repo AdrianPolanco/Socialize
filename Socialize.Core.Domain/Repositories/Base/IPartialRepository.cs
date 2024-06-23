@@ -6,8 +6,8 @@ namespace Socialize.Core.Domain.Repositories.Base
     public interface IPartialRepository<T> where T : Entity
     {
         Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
-        Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, params Expression<Func<T, object>>[] includes);
-        Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null,
+        Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, bool ignoreQueryFilters = false, params Expression<Func<T, object>>[] includes);
+        Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, bool ignoreQueryFilters = false, Expression<Func<T, bool>> filter = null,
             params Expression<Func<T, object>>[] includes);
     }
 }

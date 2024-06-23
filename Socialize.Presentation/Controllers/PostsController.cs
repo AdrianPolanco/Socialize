@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Socialize.Core.Application.Services.Base;
 using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Core.Application.UseCases.CreatePost;
+using Socialize.Core.Application.UseCases.UpdatePost;
 using Socialize.Core.Domain.Entities;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Enums;
@@ -24,6 +25,7 @@ namespace Socialize.Presentation.Controllers
     public class PostsController : Controller
     {
         private readonly ICreatePostUseCase _createPostUseCase;
+        private readonly IUpdatePostUseCase _updatePostUseCase;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly VideoValidator _videoValidator;
         private readonly IPostService _postService;
@@ -33,7 +35,7 @@ namespace Socialize.Presentation.Controllers
 
         public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, 
             IPostService postService, IEntityService<Post> entityService, IMapper mapper, IEntityService<Comment> _commentEntityService,
-            ICommentService commentService)
+            ICommentService commentService, IUpdatePostUseCase updatePostUseCase)
         {
             _createPostUseCase = createPostUseCase;
             _userManager = userManager;
@@ -43,6 +45,7 @@ namespace Socialize.Presentation.Controllers
             _mapper = mapper;
             _commentEntityService = _commentEntityService;
             _commentService = commentService;
+            _updatePostUseCase = updatePostUseCase;
         }
 
         public async Task<IActionResult> Index(Guid? currentPageId, bool isNextPage)
@@ -110,7 +113,7 @@ namespace Socialize.Presentation.Controllers
             ICollection<Comment> commentsCollection = await _commentService.GetCommentsByPostId(id, cancellationToken);
             List<Comment> comments = commentsCollection.ToList();
 
-            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, true, includesPost);
+            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, true, false, includesPost);
 
             PostDetailViewModel postDetailViewModel = _mapper.Map<PostDetailViewModel>(post);
 
@@ -118,6 +121,24 @@ namespace Socialize.Presentation.Controllers
             postDetailViewModel.CommentsCount = comments.Count;
 
             return View(postDetailViewModel);
+        }
+
+        public async Task<IActionResult> Edit(Guid id, CancellationToken cancellationToken)
+        {
+            Guid userId = Guid.Parse(_userManager.GetUserId(User));
+
+            Expression<Func<Post, object>>[] includesPost = new Expression<Func<Post, object>>[]
+            {
+                p => p.User,
+                p => p.Attachment
+            };
+
+
+            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, false, false, includesPost);
+
+            EditPostViewModel editPostViewModel = _mapper.Map<EditPostViewModel>(post);
+
+            return View(editPostViewModel);
         }
 
         public async Task<IActionResult> Comment(Guid postId, string content, CancellationToken cancellationToken)
@@ -128,6 +149,55 @@ namespace Socialize.Presentation.Controllers
 
 			return RedirectToAction("Details", new { id = postId });
 		}
+
+        public async Task<IActionResult> Update(EditPostViewModel editPostViewModel, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(editPostViewModel.Content))
+            {
+                ModelState.AddModelError("Content", "Posts must have content!");
+                return View("Edit", editPostViewModel);
+            }
+
+            string? attachmentUrl = default;
+            Stream? _stream = null;
+
+            if (editPostViewModel.Image is null && editPostViewModel.Mode is CreatePostModes.Image)
+            {
+                ModelState.AddModelError("Image", "The image is required.");
+                return View("Edit", editPostViewModel);
+            }
+
+            if (editPostViewModel.Image is not null && editPostViewModel.Mode == CreatePostModes.Image)
+            {
+                (Stream stream, string filename) = await editPostViewModel.Image.ConvertToStreamAsync(cancellationToken);
+
+                _stream = stream;
+                attachmentUrl = filename;
+            }
+
+            if (editPostViewModel.VideoUrl is not null && editPostViewModel.Mode == CreatePostModes.Video)
+            {
+                YoutubeResponses youtubeResponses = await _videoValidator.Validate(editPostViewModel.VideoUrl);
+                if (youtubeResponses == YoutubeResponses.InvalidFormat)
+                {
+                    ModelState.AddModelError("VideoUrl", "Invalid format of video url. The expected format of the video is: \"https://www.youtube.com/embed/JWtnJjn6ng0\"");
+                    return View("Edit", editPostViewModel);
+                }
+                else if (youtubeResponses == YoutubeResponses.NotFound)
+                {
+                    ModelState.AddModelError("VideoUrl", "The video was not found. Please make sure the video exists and the url is correct.");
+                    return View("Edit", editPostViewModel);
+                }
+                attachmentUrl = editPostViewModel.VideoUrl;
+            }
+
+
+            attachmentUrl = editPostViewModel.Image is null && editPostViewModel.VideoUrl is null ? null : attachmentUrl;
+
+            await _updatePostUseCase.ExecuteAsync(editPostViewModel.Id, editPostViewModel.Content, cancellationToken, _stream, attachmentUrl);
+
+            return RedirectToAction("Details", new { id = editPostViewModel.Id });
+        }
 
         public async Task<IActionResult> CommentDetails(Guid id, CancellationToken cancellationToken)
         {

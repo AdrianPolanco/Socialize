@@ -2,6 +2,7 @@
 using Socialize.Core.Domain.Entities.Base;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
+using System.Net.Mail;
 
 namespace Socialize.Infrastructure.Identity.Repositories.Base
 {
@@ -13,23 +14,18 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
 
         public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            using (await BeginTransactionAsync())
-            {
                 try
                 {
                     T? entity = await GetByIdAsync(id, cancellationToken);
                     if (entity == null) return;
                     entity.Deleted = true;
                     await UpdateAsync(entity, cancellationToken);
-                    await SaveChangesAsync(cancellationToken);
-                    await CommitAsync(cancellationToken);
                 }
                 catch (Exception e)
                 {
                     await RollbackAsync(cancellationToken);
                     throw e;
                 }
-            }
         }
 
         public virtual async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)

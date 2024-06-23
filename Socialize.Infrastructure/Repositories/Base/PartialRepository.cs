@@ -32,7 +32,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
             }
         }
 
-        public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, params Expression<Func<T, object>>[] includes)
+        public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool readOnly = false, bool ignoreQueryFilters = false, params Expression<Func<T, object>>[] includes)
         {
                 try
                 {
@@ -46,6 +46,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
                     }
 
                     if(readOnly) query = query.AsNoTracking();
+                    if(ignoreQueryFilters) query = query.IgnoreQueryFilters();
 
                     T? entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
                     return entity;
@@ -57,7 +58,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
 
         }
 
-        public virtual async Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
+        public virtual async Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, bool ignoreQueryFilters = false, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
         { 
                 int pageSize = 10;
 
