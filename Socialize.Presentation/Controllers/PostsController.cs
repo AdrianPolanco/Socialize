@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Socialize.Core.Application.Dtos;
 using Socialize.Core.Application.Services.Base;
 using Socialize.Core.Application.Services.Interfaces;
 using Socialize.Core.Application.UseCases.CreatePost;
-using Socialize.Core.Application.UseCases.ReadPosts;
 using Socialize.Core.Domain.Entities;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Enums;
@@ -30,8 +28,11 @@ namespace Socialize.Presentation.Controllers
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
         private readonly IEntityService<Post> _postEntityService;
+        private readonly ICommentService _commentService;
 
-        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, IPostService postService, IEntityService<Post> entityService, IMapper mapper)
+        public PostsController(ICreatePostUseCase createPostUseCase, UserManager<ApplicationUser> userManager, VideoValidator videoValidator, 
+            IPostService postService, IEntityService<Post> entityService, IMapper mapper, IEntityService<Comment> _commentEntityService,
+            ICommentService commentService)
         {
             _createPostUseCase = createPostUseCase;
             _userManager = userManager;
@@ -39,6 +40,8 @@ namespace Socialize.Presentation.Controllers
             _postService = postService;  
             _postEntityService = entityService;
             _mapper = mapper;
+            _commentEntityService = _commentEntityService;
+            _commentService = commentService;
         }
 
         public async Task<IActionResult> Index(Guid? currentPageId, bool isNextPage)
@@ -97,18 +100,32 @@ namespace Socialize.Presentation.Controllers
 
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken)
         {
-            Expression<Func<Post, object>>[] includes = new Expression<Func<Post, object>>[]
+            Expression<Func<Post, object>>[] includesPost = new Expression<Func<Post, object>>[]
             {
                 p => p.User,
-                p => p.Comments,
                 p => p.Attachment
             };
 
-            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, true, includes);
+            ICollection<Comment> commentsCollection = await _commentService.GetCommentsByPostId(id, cancellationToken);
+            List<Comment> comments = commentsCollection.ToList();
+
+            Post post = await _postEntityService.GetByIdAsync(id, cancellationToken, true, includesPost);
 
             PostDetailViewModel postDetailViewModel = _mapper.Map<PostDetailViewModel>(post);
 
+            postDetailViewModel.Comments = comments;
+            postDetailViewModel.CommentsCount = comments.Count;
+
             return View(postDetailViewModel);
         }
+
+        public async Task<IActionResult> Comment(Guid postId, string content, CancellationToken cancellationToken)
+        {
+			Guid userId = Guid.Parse(_userManager.GetUserId(User));
+
+			await _postService.CommentAsync(postId, userId, content, cancellationToken);
+
+			return RedirectToAction("Details", new { id = postId });
+		}
     }
 }

@@ -8,5 +8,7 @@ namespace Socialize.Core.Application.Services.Interfaces
     public interface IPostService
     {
         Task<PostsPageDto> GetPosts(Guid? id, bool isNextPage, int pageSize, CancellationToken cancellationToken, bool readOnly, Expression<Func<Post, bool>> filter = null);
-    }
+        Task CommentAsync(Guid postId, Guid userId, string comment, CancellationToken cancellationToken);
+
+	}
 }

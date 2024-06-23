@@ -50,6 +50,7 @@ namespace Socialize.Infrastructure.Identity.Extensions
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped(typeof(IPartialRepository<>), typeof(PartialRepository<>));
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             //Services
             services.AddScoped<IFileUploader, FileUploader>();

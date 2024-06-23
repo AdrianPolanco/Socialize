@@ -24,6 +24,7 @@ namespace Socialize.Core.Application.Extensions
             services.AddScoped<IReadPostsUseCase, ReadPostsUseCase>();
 
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ICommentService, CommentService>();
             return services;
         }
     }

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/a177f3304c.js" crossorigin="anonymous"></script>
 </head>
-<body class="h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
     <header>
         <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 ">
             <div class="flex flex-wrap justify-between items-center max-w-screen-xl">
@@ -54,7 +54,7 @@
         </nav>
     </header>
 
-        <main role="main" class="pb-3">
+        <main role="main" class="flex-grow pb-3">
             @RenderBody()
         </main>
 

@@ -1,4 +1,6 @@
-﻿using Google.Apis.YouTube.v3.Data;
+﻿
+using Socialize.Core.Domain.Entities;
+using Socialize.Core.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Socialize.Presentation.Models.Posts
@@ -13,9 +15,8 @@ namespace Socialize.Presentation.Models.Posts
         public string Username { get; set; }
         public string UsernamePhoto { get; set; }
         public string? AttachmentUrl { get; set; }
+        public AttachmentTypes? AttachmentType { get; set; }
         public int CommentsCount { get; set; }
         public List<Comment> Comments { get; set; }
-        [Required]
-        public Comment NewComment { get; set; }
     }
 }
