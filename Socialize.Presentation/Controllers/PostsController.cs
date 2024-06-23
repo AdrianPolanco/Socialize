@@ -199,6 +199,13 @@ namespace Socialize.Presentation.Controllers
             return RedirectToAction("Details", new { id = editPostViewModel.Id });
         }
 
+        public async Task<IActionResult> Delete(Guid postId, CancellationToken cancellationToken)
+        {
+            await _postEntityService.DeleteAsync(postId, cancellationToken);
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> CommentDetails(Guid id, CancellationToken cancellationToken)
         {
 			Guid currentUserId = Guid.Parse(_userManager.GetUserId(User));
