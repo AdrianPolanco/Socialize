@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Socialize.Presentation.Models.Users
+namespace Socialize.Presentation.Models.Profile
 {
-    public class RegisterUserViewModel : IValidatableObject
+    public class EditProfileViewModel
     {
+        [Required]
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "Name is required")]
         [MinLength(1, ErrorMessage = "The name must be at least 1 character")]
         [MaxLength(50, ErrorMessage = "The name must be cannot have more than 50 characters")]
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]*$",
-            ErrorMessage = "Names can only be alphabetic characters")]
+    ErrorMessage = "Names can only be alphabetic characters")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Lastname is required")]
@@ -31,24 +33,29 @@ namespace Socialize.Presentation.Models.Users
 
         [Required(ErrorMessage = "Phone number is required")]
         public string Phone { get; set; }
+        public string PhotoUrl { get; set; }
+        public string? Password { get; set; }
 
+        public string? ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$",
-        ErrorMessage = "Password must have lowercases, uppercases, numeric characters and special characters")]
-        public string Password { get; set; }
-
-        [Required(ErrorMessage = "Confirm password is required")]
-        public string ConfirmPassword { get; set; }
-
-        [Required(ErrorMessage = "The profile picture is required")]
         [DataType(DataType.Upload)]
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+
             if (Password != ConfirmPassword) yield return new ValidationResult("Password are not equal", new[] { nameof(Password), nameof(ConfirmPassword) });
+
+            if(!string.IsNullOrEmpty(Password) || !string.IsNullOrEmpty(ConfirmPassword))
+            {
+                string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d.*\d)(?=.*[\W_])[a-zA-Z\d\W_]{8,}$";
+
+                bool passwordHasValidFormat = Regex.IsMatch(Password, passwordPattern);
+
+                if (!passwordHasValidFormat) yield return new ValidationResult("The password you are trying to set up is not valid", new[] { nameof(Password) });
+            }
+
+            if(Image is not null && !Image.ContentType.StartsWith("image")) yield return new ValidationResult("Only image files are allowed", new[] { nameof(Image) });
             // Definir los patrones de número de teléfono válidos para República Dominicana
             var patterns = new[]
             {
@@ -61,8 +68,6 @@ namespace Socialize.Presentation.Models.Users
 
             bool matches = patterns.Any(pattern => Regex.IsMatch(Phone, pattern));
             if (!matches) yield return new ValidationResult("Phone number is not valid", new[] { nameof(Phone) });
-
-            if (!Image.ContentType.StartsWith("image")) yield return new ValidationResult("Only image files are allowed", new[] { nameof(Image) });
         }
     }
 }

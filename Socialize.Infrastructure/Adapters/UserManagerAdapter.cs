@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Socialize.Core.Application.Adapters;
+using Socialize.Core.Domain.Entities;
 using Socialize.Infrastructure.Identity.Models;
 
 namespace Socialize.Infrastructure.Identity.Adapters
@@ -25,6 +26,27 @@ namespace Socialize.Infrastructure.Identity.Adapters
             string resetToken = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
             IdentityResult result = await _userManager.ResetPasswordAsync(applicationUser, resetToken, newPassword);
             return result.Succeeded;
+        }
+
+        public async Task HashPassword(Guid userId, string password)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(userId.ToString());
+            await _userManager.RemovePasswordAsync(user);
+            await _userManager.AddPasswordAsync(user, password);
+        }
+
+        public async Task<User> UpdateUser(User user)
+        {
+            ApplicationUser fetchedUser = await _userManager.FindByIdAsync(user.Id.ToString());
+            fetchedUser.Name = user.Name;
+            fetchedUser.Lastname = user.Lastname;
+            fetchedUser.Email = user.Email.Value;
+            fetchedUser.PhoneNumber = user.PhoneNumber.Value;
+            fetchedUser.PhotoUrl = user.PhotoUrl;
+
+            await _userManager.UpdateAsync(fetchedUser);
+
+            return user;
         }
     }
 }

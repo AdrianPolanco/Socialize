@@ -104,6 +104,13 @@ namespace Socialize.Presentation.Controllers
                 return View("SignUp", registerUserViewModel);
             }
 
+            ApplicationUser userEmailExists = await _userManager.FindByEmailAsync(registerUserViewModel.Email);
+            if (userEmailExists is not null)
+            {
+                ModelState.AddModelError("Email", "Your email has already been registered.");
+                return View("SignUp", registerUserViewModel);
+            }
+
             (Stream stream, string fileName) = await registerUserViewModel.Image.ConvertToStreamAsync(cancellationToken);
 
             User user = _mapper.Map<User>(registerUserViewModel);

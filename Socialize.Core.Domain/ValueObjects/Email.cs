@@ -7,7 +7,7 @@ namespace Socialize.Core.Domain.ValueObjects
     public class Email : ValueObject
     {
         public string Value { get; }
-
+        public Email() { }
         private Email(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

@@ -1,38 +1,47 @@
-﻿@using Socialize.Presentation.Models.Users
-@model RegisterUserViewModel
+﻿@using Socialize.Presentation.Models.Profile
+@model EditProfileViewModel
 @{
-    ViewData["Title"] = "Sign Up";
-    Layout = "~/Views/Shared/_SignUpLayout.cshtml";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
 }
 
 <div class="flex flex-col p-4">
-    @if (TempData["SuccessMessage"] != null)
+    @if (TempData["Message"] != null && TempData["Message"] == "Your account has been updated succesfully!.")
     {
         <div class="rounded p-4 bg-green-300">
-            @TempData["SuccessMessage"]
+            @TempData["Message"]
         </div>
     }
+    else if (TempData["Message"] != null && TempData["Message"] == "There has been an error updating your account.")
+    {
+        <div class="rounded p-4 bg-red-300">
+            @TempData["Message"]
+        </div>
+    }
+
     <div class="flex flex-col md:flex-row  justify-center items-center w-full gap-x-12">
 
         <div class="flex flex-col items-center border border-1 border-red-500 rounded p-4">
-            <img class="w-44 h-44 mb-3 rounded-full" src="~/images/user-default.png" id="imageCard" alt="Your profile photo" />
-            <h5 class="mb-1 text-xl font-medium dark\:text-red-500 " id="nameCard"></h5>
+            <img class="w-44 h-44 mb-3 rounded-full" src="@Model.PhotoUrl" id="imageCard" alt="Your profile photo" />
+            <h5 class="mb-1 text-xl font-medium dark\:text-red-500 " id="nameCard">@Model.Name @Model.Lastname</h5>
             <div class="flex gap-x-1">
-                <span class="text-sm text-gray-500 font-semibold" id="phoneCard"></span>
+                <span class="text-sm text-gray-500 font-semibold" id="phoneCard">@Model.Phone</span>
             </div>
             <div class="flex gap-x-1">
-                <span class="text-sm text-gray-500 font-semibold" id="emailCard"></span>
+                <span class="text-sm text-gray-500 font-semibold" id="emailCard">@Model.Email</span>
             </div>
             <div class="flex gap-x-1">
-                <span class="text-sm text-gray-500 font-semibold" id="usernameCard"></span>
+                <span class="text-sm text-gray-500 font-semibold" id="usernameCard">@Model.Username</span>
             </div>
         </div>
 
-        <form enctype="multipart/form-data" method="post" asp-controller="Home" asp-action="Create">
+        <form enctype="multipart/form-data" method="post" asp-controller="Profile" asp-action="Update">
             @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PhotoUrl" />
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t sm:mb-5 dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-red-600">
-                    Register new user
+                    Edit your profile
                 </h3>
             </div>
             <div class="grid md:grid-cols-2  gap-4 mb-4 sm:grid-cols-2">
@@ -93,7 +102,7 @@
             </div>
             <div class="flex items-center gap-4">
                 <button type="submit" class="text-white bg-red-500 border border-red-500 hover:bg-white hover:text-red-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Sign Up
+                    Edit profile
                 </button>
                 <a asp-controller="Home" asp-action="Index" class="text-gray-400 inline-flex items-center hover:text-gray-700 border border-gray-400 hover:border-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                     <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
@@ -104,6 +113,8 @@
     </div>
 </div>
 <script>
+
+    document.addEventListener("DOMContentLoaded", updateCard);
     function previewImage(event) {
         const file = event.target.files[0];
         const reader = new FileReader();

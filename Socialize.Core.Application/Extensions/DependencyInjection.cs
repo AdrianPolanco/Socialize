@@ -7,6 +7,7 @@ using Socialize.Core.Application.UseCases.CreatePost;
 using Socialize.Core.Application.UseCases.ReadPosts;
 using Socialize.Core.Application.UseCases.ResetPassword;
 using Socialize.Core.Application.UseCases.UpdatePost;
+using Socialize.Core.Application.UseCases.UpdateProfile;
 using System.Reflection;
 
 namespace Socialize.Core.Application.Extensions
@@ -24,6 +25,7 @@ namespace Socialize.Core.Application.Extensions
             services.AddScoped<ICreatePostUseCase, CreatePostUseCase>();
             services.AddScoped<IUpdatePostUseCase, UpdatePostUseCase>();
             services.AddScoped<IReadPostsUseCase, ReadPostsUseCase>();
+            services.AddScoped<IUpdateProfileUseCase, UpdateProfileUseCase>();
 
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();

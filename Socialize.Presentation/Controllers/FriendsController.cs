@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Socialize.Core.Application.Services.Base;
-using Socialize.Core.Application.UseCases.ReadPosts;
 using Socialize.Core.Domain.Entities;
 using Socialize.Infrastructure.Identity.Models;
+using Socialize.Presentation.Filters;
 using Socialize.Presentation.Models.Friendships;
-using Socialize.Presentation.Models.Posts;
 using System.Linq.Expressions;
 
 namespace Socialize.Presentation.Controllers
 {
+    [Authorize]
+    [RedirectToLoginIfNotAuthenticated]
     public class FriendsController : Controller
     {
         private readonly IEntityService<Friendship> _friendshipService;

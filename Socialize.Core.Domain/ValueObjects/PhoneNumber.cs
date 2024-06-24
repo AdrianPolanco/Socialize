@@ -5,6 +5,7 @@ public class PhoneNumber: ValueObject
 {
     public string Value { get; }
 
+    public PhoneNumber() { }
     private PhoneNumber(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

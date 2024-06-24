@@ -5,8 +5,8 @@ using Socialize.Core.Domain.Enums;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Models.Comments;
 using Socialize.Presentation.Models.Posts;
+using Socialize.Presentation.Models.Profile;
 using Socialize.Presentation.Models.Users;
-using System.Globalization;
 
 namespace Socialize.Presentation.Mappers
 {
@@ -22,6 +22,19 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Phone))
                 .ReverseMap();
+
+            CreateMap<User, EditProfileViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Lastname, opt => opt.MapFrom(src => src.Lastname))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.Value))
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.PhotoUrl))
+                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber.Value))
+                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                 .ForMember(dest => dest.ConfirmPassword, opt => opt.MapFrom(src => src.Password))
+                 .ReverseMap()
+                   .ForPath(dest => dest.PhoneNumber.Value, opt => opt.MapFrom(src => src.Phone));
 
             CreateMap<LoginUserViewModel, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
