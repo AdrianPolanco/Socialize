@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Socialize.Core.Application\Socialize.Core.Application.csproj" />
+    <ProjectReference Include="..\Socialize.Core.Domain\Socialize.Core.Domain.csproj" />
   </ItemGroup>
 
 </Project>
