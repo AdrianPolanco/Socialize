@@ -58,9 +58,29 @@ namespace Socialize.Presentation.Controllers
                 UserId = currentUserId,
                 FriendId = friendId
             };
-           
-            await _friendshipService.AddAsync(friendship, cancellationToken);
 
+            Expression<Func<Friendship, bool>> filter = (f => f.FriendId == friendId && f.UserId == currentUserId || f.FriendId == currentUserId && f.UserId == friendId);
+            ICollection<Friendship> wereFriendsBefore = await _friendshipService.GetByFilter(filter, cancellationToken, false, true);
+
+            if(wereFriendsBefore.Count == 0) await _friendshipService.AddAsync(friendship, cancellationToken);
+            else
+            {
+                Friendship resendFriendship = wereFriendsBefore.First();
+                resendFriendship.Deleted = false;
+                await _friendshipService.UpdateAsync(resendFriendship, cancellationToken);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(Guid friendId, CancellationToken cancellationToken)
+        {
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+            Guid currentUserId = Guid.Parse(currentUser.Id);
+            Expression<Func<Friendship, bool>> filter = (f => f.FriendId == friendId && f.UserId == currentUserId || f.FriendId == currentUserId && f.UserId == friendId);
+            ICollection<Friendship> friendshipCollection = await _friendshipService.GetByFilter(filter, cancellationToken, false);
+            Friendship? friendship = friendshipCollection.FirstOrDefault();
+            if (friendship is not null) await _friendshipService.DeleteAsync(friendship.Id, cancellationToken);
             return RedirectToAction("Index");
         }
     }
