@@ -39,6 +39,7 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
                 .ForMember(dest => dest.AttachmentUrl, opt => opt.MapFrom(src => src.Attachment.Url))
                 .ForMember(dest => dest.AttachmentType, opt => opt.MapFrom(src => src.Attachment.Type != null? src.Attachment.Type : (AttachmentTypes?)null))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ReverseMap();
 
             CreateMap<Post, EditPostViewModel>()
@@ -89,6 +90,18 @@ namespace Socialize.Presentation.Mappers
                 .ForMember(dest => dest.NextId, opt => opt.MapFrom(src => src.NextId))
                 .ForMember(dest => dest.PreviousId, opt => opt.MapFrom(src => src.PreviousId))
                 .ForMember(dest => dest.IsFirstPage, opt => opt.MapFrom(src => src.IsFirstPage))
+                .ReverseMap();
+
+            CreateMap<Post, PostViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.CreatedAtFormatted, opt => opt.MapFrom(src => $"{src.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")}"))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Name))
+                .ForMember(dest => dest.UsernamePhoto, opt => opt.MapFrom(src => src.User.PhotoUrl))
+                .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => src.Comments.Count))
+                .ForMember(dest => dest.AttachmentUrl, opt => opt.MapFrom(src => src.Attachment.Url))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Attachment.Type != null? src.Attachment.Type : (AttachmentTypes?)null))
                 .ReverseMap();
         }
     }

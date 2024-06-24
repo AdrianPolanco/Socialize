@@ -1,0 +1,207 @@
+﻿@using AutoMapper
+@using Microsoft.AspNetCore.Identity
+@using Socialize.Core.Application.Dtos
+@using Socialize.Core.Application.Services.Base
+@using Socialize.Core.Application.UseCases.ReadPosts
+@using Socialize.Core.Domain.Entities
+@using Socialize.Core.Domain.Enums
+@using Socialize.Infrastructure.Identity.Models
+@using Socialize.Presentation.Enums
+@using Socialize.Presentation.Models.Friendships
+@using Socialize.Presentation.Models.Posts
+@using System.Linq.Expressions
+@model FriendshipSearchViewModel
+@inject IMapper _mapper
+@inject UserManager<ApplicationUser> _userManager
+@inject IEntityService<Post> _postService
+@{
+    ViewData["Title"] = "Friends";
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
+    var articleClass = "bg-white border rounded max-w-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2";
+    ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+    Guid currentUserId = Guid.Parse(currentUser.Id);
+    List<Guid> friendsIds = Model.Friends.Select(f => f.Id).ToList();
+    Expression<Func<Post, bool>> filter = p => friendsIds.Contains(p.UserId);
+    Expression<Func<Post, object>>[] includes = new Expression<Func<Post, object>>[] { p => p.User, p => p.Comments, p => p.Attachment };
+    ICollection<Post> postCollection = await _postService.GetByFilter(filter, new CancellationToken(), true, false, includes);
+    List<Post> posts = postCollection.OrderByDescending(p => p.CreatedAt).ToList();
+    PostPageViewModel postPageViewModel = new();
+
+    postPageViewModel.Posts = _mapper.Map<List<PostViewModel>>(posts);
+}
+<section class="flex gap-x-3">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <form id="friendForm" asp-controller="Friends" asp-action="Index" enctype="multipart/form-data">
+
+            <!-- Post Content Section -->
+            <div class="mb-6">
+                <label asp-for="Username" class="block text-gray-700 text-sm font-bold mb-2">Search user: </label>
+                <div class="flex gap-x-2 items-center">
+                    <input asp-for="Username" id="postContent" rows="4" class="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500" placeholder="john_doe55" />
+                    <button type="submit"><i class="fa-solid fa-search text-red-500"></i></button>
+                </div>
+        </form>
+        <span asp-validation-for="Username" class="text-red-500"></span>
+            </div>
+            @if (Model.Searched)
+            {
+                    <div class="mb-6 flex-grow overflow-y-auto h-40">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Results: </label>
+                    @if(Model.Users.Count > 0)
+                    {
+                        @foreach (User user in Model.Users)
+                        {
+                            <article class="flex gap-x-3 items-center mb-2">
+                                <img class="rounded-full w-8 h-8" src="@user.PhotoUrl" />
+                                <span>@user.Username</span>
+                                <a asp-asp-controller="Friends" asp-action="Add" asp-route-friendId="@user.Id"><i class="fa-solid fa-plus text-green-500"></i></a>
+                            </article>
+                        }
+                    }
+                    else
+                    {
+                        <article class="flex gap-x-3 items-center mb-2">
+                            <span>Not found user.</span>
+                        </article>
+                    }
+
+                    </div>
+            }
+
+            <div class="mb-6 flex-grow overflow-y-auto h-40">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Friends: </label>
+            @if(Model.Friends.Count > 0)
+            {
+                @foreach(User friend in Model.Friends){
+                        <article class="flex gap-x-3 items-center">
+                            <img class="rounded-full w-8 h-8" src="@friend.PhotoUrl" />
+                            <span>@friend.Username</span>
+                            <a href="#"><i class="fa-solid fa-trash text-red-500"></i></a>
+                        </article>
+                    }
+            }else{
+                <article class="flex gap-x-3 items-center">
+                   <span>You have not added any friend yet.</span>
+                </article>
+            }
+             </div>     
+       
+    </div>
+    <div class="flex-grow overflow-y-auto">
+        <section class="bg-gray-100 flex flex-col gap-8 items-center justify-center py-8 px-4">
+            @foreach (PostViewModel postViewModel in postPageViewModel.Posts)
+            {
+                if (postViewModel.Type == AttachmentTypes.Image)
+                {
+                    <article class="@articleClass">
+                        <div class="flex justify-between items-center p-2">
+                            <div class="flex items-center px-4 py-3 gap-x-1">
+                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                <div class="ml-3">
+                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                </div>
+                            </div>
+                            <div class="text-gray-400 text-xs">
+                                @postViewModel.CreatedAtFormatted
+                            </div>
+                        </div>
+                        <img src="@postViewModel.AttachmentUrl" alt="Post picture" />
+                        <div class="p-2">
+                            @postViewModel.Content
+                        </div>
+                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-comment fa-lg"></i>
+                            </a>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                @postViewModel.CommentsCount Comments
+                            </a>
+                        </div>
+                    </article>
+                }
+                else if (postViewModel.Type == AttachmentTypes.Video)
+                {
+                    <article class="@articleClass">
+                        <div class="flex justify-between items-center p-2">
+                            <div class="flex items-center px-4 py-3 gap-x-1">
+                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                <div class="ml-3">
+                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                </div>
+                            </div>
+                            <div class="text-gray-400 text-xs">
+                                @postViewModel.CreatedAtFormatted
+                            </div>
+                        </div>
+                        <div class="relative w-full pb-56.25 mb-5">
+                            <iframe height="200"
+                                    class="relative w-full"
+                                    src="@postViewModel.AttachmentUrl"
+                                    frameborder="0"
+                                    allowfullscreen></iframe>
+                        </div>
+                        <div class="p-2">
+                            @postViewModel.Content
+                        </div>
+                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-comment fa-lg"></i>
+                            </a>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                @postViewModel.CommentsCount Comments
+                            </a>
+                        </div>
+                    </article>
+                }
+                else
+                {
+                    <article class="@articleClass">
+                        <div class="flex justify-between items-center p-2">
+                            <div class="flex items-center px-4 py-3 gap-x-1">
+                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                <div class="ml-3">
+                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                </div>
+                            </div>
+                            <div class="text-gray-400 text-xs">
+                                @postViewModel.CreatedAtFormatted
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            @postViewModel.Content
+                        </div>
+                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-comment fa-lg"></i>
+                            </a>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                @postViewModel.CommentsCount Comments
+                            </a>
+                        </div>
+                    </article>
+                }
+            }
+            <div class="flex flex-row mx-auto">
+                @if (postPageViewModel.PreviousId.HasValue)
+                {
+                    <a asp-controller="Posts" asp-action="Index" asp-route-currentPageId="@postPageViewModel.PreviousId" asp-route-isNextPage="false" class="bg-red-600 text-white rounded-l-md border-r border-gray-100 py-2 hover:bg-red-700 hover:text-white px-3">
+                        <div class="flex flex-row align-middle items-center gap-x-2">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <p class="ml-2">Newer</p>
+                        </div>
+                    </a>
+                }
+                @if (postPageViewModel.NextId.HasValue)
+                {
+                    <a asp-controller="Posts" asp-action="Index" asp-route-currentPageId="@postPageViewModel.NextId" asp-route-isNextPage="true" class="bg-red-600 text-white rounded-r-md py-2 border-l border-gray-200 hover:bg-red-700 hover:text-white px-3">
+                        <div class="flex flex-row align-middle items-center gap-x-2">
+                            <p class="ml-2">Older</p>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </a>
+                }
+            </div>
+        </section>
+    </div>
+
+</section>

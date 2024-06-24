@@ -89,98 +89,102 @@
         </form>
     </div>
     <div class="flex-grow overflow-y-auto">
-        <section class="bg-gray-100 flex flex-col gap-8 items-center justify-center py-8 px-4">
-            @foreach (PostViewModel postViewModel in postPageViewModel.Posts)
+        <section class="bg-white flex flex-col gap-8 items-center justify-center py-8 px-4">
+            @if(postPageViewModel.Posts.Count == 0)
             {
-                if (postViewModel.Type == AttachmentTypes.Image)
-                { 
-                    <article class="@articleClass">
-                        <div class="flex justify-between items-center p-2">
-                            <div class="flex items-center px-4 py-3 gap-x-1">
-                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
-                                <div class="ml-3">
-                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
-                                </div>
-                            </div>
-                            <div class="text-gray-400 text-xs">
-                                @postViewModel.CreatedAtFormatted
-                            </div>
-                        </div>
-                        <img src="@postViewModel.AttachmentUrl" alt="Post picture" />
-                        <div class="p-2">
-                            @postViewModel.Content
-                        </div>
-                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
-                                <i class="fa-solid fa-comment fa-lg"></i>
-                            </a>
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
-                                @postViewModel.CommentsCount Comments
-                            </a>
-                        </div>
-                    </article>
-                }
-                else if (postViewModel.Type == AttachmentTypes.Video)
+                <p class="text-gray-400 text-lg">No posts to show</p>
+            }else{
+                @foreach (PostViewModel postViewModel in postPageViewModel.Posts)
                 {
-                    <article class="@articleClass">
-                        <div class="flex justify-between items-center p-2">
-                            <div class="flex items-center px-4 py-3 gap-x-1">
-                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
-                                <div class="ml-3">
-                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                    if (postViewModel.Type == AttachmentTypes.Image)
+                    { 
+                        <article class="@articleClass">
+                            <div class="flex justify-between items-center p-2">
+                                <div class="flex items-center px-4 py-3 gap-x-1">
+                                    <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                    <div class="ml-3">
+                                        <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 text-xs">
+                                    @postViewModel.CreatedAtFormatted
                                 </div>
                             </div>
-                            <div class="text-gray-400 text-xs">
-                                @postViewModel.CreatedAtFormatted
+                            <img src="@postViewModel.AttachmentUrl" alt="Post picture" />
+                            <div class="p-2">
+                                @postViewModel.Content
                             </div>
-                        </div>
-                        <div class="relative w-full pb-56.25 mb-5">
-                            <iframe height="200"
-                                    class="relative w-full"
-                                    src="@postViewModel.AttachmentUrl"
-                                    frameborder="0"
-                                    allowfullscreen></iframe>
-                        </div>
-                        <div class="p-2">
-                            @postViewModel.Content
-                        </div>
-                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
-                                <i class="fa-solid fa-comment fa-lg"></i>
-                            </a>
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
-                                @postViewModel.CommentsCount Comments
-                            </a>
-                        </div>
-                    </article>
-                }
-                else
-                {
-                    <article class="@articleClass">
-                        <div class="flex justify-between items-center p-2">
-                            <div class="flex items-center px-4 py-3 gap-x-1">
-                                <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
-                                <div class="ml-3">
-                                    <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                            <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                    <i class="fa-solid fa-comment fa-lg"></i>
+                                </a>
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                    @postViewModel.CommentsCount Comments
+                                </a>
+                            </div>
+                        </article>
+                    }
+                    else if (postViewModel.Type == AttachmentTypes.Video)
+                    {
+                        <article class="@articleClass">
+                            <div class="flex justify-between items-center p-2">
+                                <div class="flex items-center px-4 py-3 gap-x-1">
+                                    <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                    <div class="ml-3">
+                                        <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 text-xs">
+                                    @postViewModel.CreatedAtFormatted
                                 </div>
                             </div>
-                            <div class="text-gray-400 text-xs">
-                                @postViewModel.CreatedAtFormatted
+                            <div class="relative w-full pb-56.25 mb-5">
+                                <iframe height="200"
+                                        class="relative w-full"
+                                        src="@postViewModel.AttachmentUrl"
+                                        frameborder="0"
+                                        allowfullscreen></iframe>
                             </div>
-                        </div>
-                        <div class="p-2">
-                            @postViewModel.Content
-                        </div>
-                        <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
-                                <i class="fa-solid fa-comment fa-lg"></i>
-                            </a>
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
-                                @postViewModel.CommentsCount Comments
-                            </a>
-                        </div>
-                    </article>
-                }
+                            <div class="p-2">
+                                @postViewModel.Content
+                            </div>
+                            <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                    <i class="fa-solid fa-comment fa-lg"></i>
+                                </a>
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                    @postViewModel.CommentsCount Comments
+                                </a>
+                            </div>
+                        </article>
+                    }
+                    else
+                    {
+                        <article class="@articleClass">
+                            <div class="flex justify-between items-center p-2">
+                                <div class="flex items-center px-4 py-3 gap-x-1">
+                                    <img class="h-8 w-8 rounded-full" src="@postViewModel.UsernamePhoto" />
+                                    <div class="ml-3">
+                                        <span class="text-sm font-semibold antialiased block leading-tight">@postViewModel.Username</span>
+                                    </div>
+                                </div>
+                                <div class="text-gray-400 text-xs">
+                                    @postViewModel.CreatedAtFormatted
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                @postViewModel.Content
+                            </div>
+                            <div class="flex items-center justify-between mx-4 mt-3 mb-2 p-2">
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500">
+                                    <i class="fa-solid fa-comment fa-lg"></i>
+                                </a>
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@postViewModel.Id" class="flex items-center justify-center text-red-500 font-semibold">
+                                    @postViewModel.CommentsCount Comments
+                                </a>
+                            </div>
+                        </article>
+                    }
             }
             <div class="flex flex-row mx-auto">
                 @if (postPageViewModel.PreviousId.HasValue)
@@ -201,7 +205,9 @@
                         </div>
                     </a>
                 }
-            </div>
+            }
+            </div>}
+            
         </section>
     </div>
 

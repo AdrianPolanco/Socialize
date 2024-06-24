@@ -34,5 +34,9 @@ namespace Socialize.Core.Application.Services.Base
             await _repository.DeleteAsync(id, cancellationToken);
         }
 
+        public async Task<ICollection<T>> GetByFilter(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, bool readOnly = true, bool ignoreQueryFilters = false, Expression<Func<T, object>>[] includes = null)
+        {
+            return await _repository.GetByFilter(filter, cancellationToken, readOnly, ignoreQueryFilters, includes);
+        }
     }
 }

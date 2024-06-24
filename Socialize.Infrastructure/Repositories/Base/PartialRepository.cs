@@ -58,6 +58,23 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
 
         }
 
+
+        public async Task<ICollection<T>> GetByFilter(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, bool readOnly = true, bool ignoreQueryFilters = false, Expression<Func<T, object>>[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>().Where(filter);
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, include) => current.Include(include));
+            }
+
+            if (readOnly) query = query.AsNoTracking();
+
+            if (ignoreQueryFilters) query = query.IgnoreQueryFilters();
+
+            return await query.ToListAsync(cancellationToken);
+
+        }
+
         public virtual async Task<ICollection<T>> GetByPagesAsync(Guid? lastId, CancellationToken cancellationToken, bool readOnly = true, bool ignoreQueryFilters = false, Expression<Func<T, bool>> filter = null, params Expression<Func<T, object>>[] includes)
         { 
                 int pageSize = 10;

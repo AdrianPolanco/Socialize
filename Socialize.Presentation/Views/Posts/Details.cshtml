@@ -11,6 +11,8 @@
     Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
 	var user = await UserManager.GetUserAsync(User);
 	var articleClass = "bg-white border rounded-lg max-w-md";
+    ApplicationUser applicationUser = await UserManager.GetUserAsync(User);
+    Guid currentUserId = Guid.Parse(applicationUser.Id);
 }
 
 <!-- component -->
@@ -30,10 +32,13 @@
 					</time>
 				</div>
 			</div>
-			<div class="bg-gray-100	rounded-full h-3.5 flex	items-center justify-center gap-x-2">
-				<a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i></a>
-				<a onclick="openModal('@Model.Id')"><i class="fa-solid fa-trash"></i></a>
-			</div>
+            @if(Model.UserId == currentUserId){
+                <div class="bg-white rounded-full h-3.5 flex	items-center justify-center gap-x-2">
+				    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+				    <a onclick="openModal('@Model.Id')"><i class="fa-solid fa-trash"></i></a>
+			    </div>
+            }
+			
 		</div>
 		<div class="whitespace-pre-wrap mt-7">@Model.Content</div>
 		@if(Model.AttachmentUrl is not null && Model.AttachmentType is not null)

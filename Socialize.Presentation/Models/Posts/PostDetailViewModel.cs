@@ -18,5 +18,6 @@ namespace Socialize.Presentation.Models.Posts
         public AttachmentTypes? AttachmentType { get; set; }
         public int CommentsCount { get; set; }
         public List<Comment> Comments { get; set; }
+        public Guid UserId { get; set; }
     }
 }

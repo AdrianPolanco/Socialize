@@ -1,8 +1,9 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using Socialize.Core.Domain.Entities.Base;
 using Socialize.Core.Domain.Repositories.Base;
 using Socialize.Infrastructure.Identity.Context;
-using System.Net.Mail;
+using System.Linq.Expressions;
 
 namespace Socialize.Infrastructure.Identity.Repositories.Base
 {
@@ -27,6 +28,7 @@ namespace Socialize.Infrastructure.Identity.Repositories.Base
                     throw e;
                 }
         }
+
 
         public virtual async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
         {
