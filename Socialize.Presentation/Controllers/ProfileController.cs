@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Socialize.Core.Application.Helper;
 using Socialize.Core.Application.Services.Base;
 using Socialize.Core.Application.UseCases.UpdateProfile;
 using Socialize.Core.Domain.Entities;
-using Socialize.Core.Domain.ValueObjects;
 using Socialize.Infrastructure.Identity.Models;
 using Socialize.Presentation.Extensions;
+using Socialize.Presentation.Filters;
 using Socialize.Presentation.Models.Profile;
-using Socialize.Presentation.Models.Users;
 
 
 namespace Socialize.Presentation.Controllers
 {
+    [Authorize]
+    [RedirectToLoginIfNotAuthenticated]
     public class ProfileController : Controller
     {
         private readonly IEntityService<User> _userService;
