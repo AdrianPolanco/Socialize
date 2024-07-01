@@ -1,8 +1,5 @@
-Of course! Here is the translated template for your project's README:
 
----
-
-# Basic Social Network Project
+# Social Network Project
 
 This project is a basic social network developed with .NET 7 using ASP.NET Core MVC and a SQL Server container using Docker Compose. The application allows users to register, activate their account via an email link, log in, add friends, and create posts with text, images, or videos. Additionally, posts can be commented on and comments can receive replies.
 
